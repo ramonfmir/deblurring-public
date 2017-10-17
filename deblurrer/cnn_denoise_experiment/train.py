@@ -15,11 +15,10 @@ model_save_path = './trained_models/deblurring_model'
 dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
 
 # Parameters
-corruption_level = 0.2
 image_width = 270
 image_height = 90
-batch_size = 50
-num_iter = 1
+batch_size = 100
+num_iter = 5
 
 # Hyperparameters
 alpha = 0.01
@@ -39,18 +38,12 @@ def train_model(sess):
     for i in range(num_iter):
         for start, end in zip(range(0, len(trX), batch_size), range(batch_size, len(trX), batch_size)):
             input_ = trX[start:end]
-            noise_mask = np.random.normal(0, 1 - corruption_level, input_.shape)
-            _,cost = sess.run([network.train_op,network.cost], feed_dict={network.original: input_, network.corrupted: noise_mask * input_})
-            #noise_mask = np.random.binomial(1, 1 - corruption_level, teX.shape)
-            # sess.run(network.cost, feed_dict={network.original: teX, network.corrupted: noise_mask * teX})
+            blurred = model.add_noise(input_)
+            _,cost = sess.run([network.train_op, network.cost], feed_dict={network.original: input_, network.corrupted: blurred})
             print('Epoch: {} - cost= {:.8f}'.format(i, cost))
 
         saver.save(sess, model_save_path)
-    noise_mask = np.random.normal(0, 1 - corruption_level, teX.shape)
-    recon_img = sess.run([network.deblurred], feed_dict={network.corrupted: noise_mask * teX})[0]
-    print("After weed sess {}".format(recon_img))
-    plt.imshow(recon_img, cmap='gray')
-    plt.show()
+
 
 # Run training / viewing
 with tf.Session() as sess:

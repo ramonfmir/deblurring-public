@@ -15,22 +15,27 @@ image_width = 270
 image_height = 90
 
 # Method to show results visually
-def show_encoding(sess, imgs, model):
-    noise_mask = np.random.normal(0, 1 - corruption_level, imgs.shape)
-    recon_img = sess.run([model.deblurred], feed_dict={model.corrupted: noise_mask * imgs})[0]
-    print("After weed sess")
-    plt.imshow(recon_img[0], cmap='gray')
-    plt.show()
+def show_encoding(sess, imgs, network):
+    blurred = model.add_noise(imgs)
+    recon_img = sess.run([network.deblurred], feed_dict={network.corrupted: blurred})[0]
+
+    for i in range(len(imgs)):
+        plt.figure(1)
+        plt.title('Reconstructed Images')
+        plt.imshow(recon_img[i, ..., 0], cmap='gray')
+        plt.figure(2)
+        plt.title('Input Images')
+        gray_scale = tf.reduce_mean(blurred, axis=3, keep_dims=True)
+        plt.imshow(sess.run(gray_scale)[i, ..., 0],cmap = 'gray')
+        plt.show()
 
 # Evaluate model
 with tf.Session() as sess:
-    saver = tf.train.Saver()
-    network = model.initialise(image_width, image_height, 0.1)
-    # tf.initialize_all_variables().run()
-    saver.restore(sess, model_save_path)
+    # Load graph
+    network = model.initialise(image_width, image_height)
 
-    # Accessing the default graph which we have restored
-    #graph = tf.get_default_graph()
+    saver = tf.train.Saver()
+    saver.restore(sess, model_save_path)
 
     # Load MNIST data
     test_images, _ = input_data.load_images(dataset_path, image_width,image_height)
