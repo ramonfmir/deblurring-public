@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import scipy
 import model
 import input_data
+import blurrer
 
 # ---------- Here choose your model ----------
 # import conv_decov_model as model
@@ -38,7 +39,7 @@ def train_model(sess):
     for i in range(num_iter):
         for start, end in zip(range(0, len(trX), batch_size), range(batch_size, len(trX), batch_size)):
             input_ = trX[start:end]
-            blurred = model.add_noise(input_)
+            blurred = blurrer.blur_all(input_) # (100, img)
             _,cost = sess.run([network.train_op, network.cost], feed_dict={network.original: input_, network.corrupted: blurred})
             print('Epoch: {} - cost= {:.8f}'.format(i, cost))
 
@@ -47,7 +48,7 @@ def train_model(sess):
 
 # Run training / viewing
 with tf.Session() as sess:
-    if (sys.argv[1] == 'restart'):
+    if (len(sys.argv) != 0 and sys.argv[1] == 'restart'):
         network.init.run()
     else:
         saver.restore(sess, model_save_path)

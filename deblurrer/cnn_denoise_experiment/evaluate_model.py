@@ -3,7 +3,9 @@ import cnn_trial_model as model
 # from tensorflow.examples.tutorials.mnist import input_data
 import input_data
 import numpy as np
+import blurrer
 import matplotlib.pyplot as plt
+from skimage import color
 
 # Paths
 model_save_path = './trained_models/deblurring_model' # './trained_models/autoencoder_model'
@@ -16,7 +18,8 @@ image_height = 90
 
 # Method to show results visually
 def show_encoding(sess, imgs, network):
-    blurred = model.add_noise(imgs)
+    blurred = blurrer.blur_all(imgs)
+    print(np.shape(blurred))
     recon_img = sess.run([network.deblurred], feed_dict={network.corrupted: blurred})[0]
 
     for i in range(len(imgs)):
@@ -25,8 +28,10 @@ def show_encoding(sess, imgs, network):
         plt.imshow(recon_img[i, ..., 0], cmap='gray')
         plt.figure(2)
         plt.title('Input Images')
-        gray_scale = tf.reduce_mean(blurred, axis=3, keep_dims=True)
-        plt.imshow(sess.run(gray_scale)[i, ..., 0],cmap = 'gray')
+        plt.imshow(blurred[i])
+        plt.figure(3)
+        plt.title('Initial Images')
+        plt.imshow(imgs[i])
         plt.show()
 
 # Evaluate model
