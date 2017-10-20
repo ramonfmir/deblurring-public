@@ -75,6 +75,7 @@ def group_rectangles(rectangles):
 
         if not intersected:
             grouped.append(rectA)
+
     # Return list of non-intersecting rectangles
     return grouped
 
@@ -83,7 +84,7 @@ if __name__ == "__main__":
 
     # Image pre-processing.
 
-    img = pt.apply_perspective(img, 10, 0)
+    img = pt.apply_perspective(img, 13, 0)
 
     # Finding characters.
 
@@ -95,17 +96,17 @@ if __name__ == "__main__":
     all_rectangles = []
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if area > 30 and area < 700:
-            all_rectangles.append(cv2.boundingRect(cnt))
+        rect = cv2.boundingRect(cnt)
+        if area > 40 and area < 700:
+            all_rectangles.append(rect)
 
     rectangles = group_rectangles(all_rectangles)
 
     for rect in rectangles:
         [x, y, w, h] = rect
-        if  h > 16 and h > w:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-            roi = thresh[y:(y + h), x:(x + w)]
-            roismall = cv2.resize(roi, (10, 10))
+        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        roi = thresh[y:(y + h), x:(x + w)]
+        roismall = cv2.resize(roi, (10, 10))
 
     cv2.imshow('Characters', img)
     cv2.waitKey(0)
