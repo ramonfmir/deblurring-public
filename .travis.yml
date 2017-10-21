@@ -10,5 +10,5 @@ script:
   # Style checks.
   - for f in $(find . -name '*.py'); do pycodestyle --first $f; done
   # Train neural network and send results.
-  - python3 qvks/deblurring/deblurrer/cnn_denoise_experiment/train.py restart >> output.txt
-  - ./qvks/deblurring/slack_file_upload oputput.txt "#tensorboard-logs"
+  - python3 deblurring/deblurrer/cnn_denoise_experiment/train.py restart >> output.txt
+  - ./deblurring/slack_file_upload oputput.txt "#tensorboard-logs"
