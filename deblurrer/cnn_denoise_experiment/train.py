@@ -8,8 +8,8 @@ import blurrer
 import os
 import glob
 
-sys.path.insert(0, './model_definitions/')
-import cnn_trial_model as model
+
+from model_definitions import cnn_trial_model as model
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
