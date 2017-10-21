@@ -29,9 +29,11 @@ def autoencoder(inputs):
 def initialise(image_width, image_height, lr=0.01):
     original = tf.placeholder(tf.float32, (None, image_height, image_width, 3))  # input to the network (MNIST images)
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
+    tf.summary.image('original_greyscale', original_greyscale)
 
     corrupted = tf.placeholder(tf.float32, (None, image_height, image_width, 3))  # input to the network (MNIST images)
     corrupted_greyscale = tf.reduce_mean(corrupted, axis=3,keep_dims = True)
+    tf.summary.image('corrupted_greyscale', corrupted_greyscale)
 
     deblurred = autoencoder(corrupted)  # create the Autoencoder network
 
