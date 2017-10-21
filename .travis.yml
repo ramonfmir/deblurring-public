@@ -1,5 +1,8 @@
-language: python
 sudo: enabled
+
+language: python
+python:
+  - 3.6
 
 # Install dependencies.
 install:
