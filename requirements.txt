@@ -1,2 +1,5 @@
 pycodestyle
 tensorflow
+matplotlib
+numpy
+scikit-image
