@@ -11,6 +11,10 @@ import blurrer
 # import conv_decov_model as model
 import cnn_trial_model as model
 
+FLAGS = tf.app.flags.FLAGS
+tf.app.flags.DEFINE_string('run', 'restart',
+                            "Which operation to run. [continue|restart]")
+
 # Paths
 model_save_path = './trained_models/deblurring_model'
 dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
@@ -19,7 +23,7 @@ dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
 image_width = 270
 image_height = 90
 batch_size = 100
-num_iter = 5
+num_iter = 10
 
 # Hyperparameters
 alpha = 0.01
@@ -47,9 +51,13 @@ def train_model(sess):
 
 
 # Run training / viewing
-with tf.Session() as sess:
-    if (len(sys.argv) != 0 and sys.argv[1] == 'restart'):
-        network.init.run()
-    else:
-        saver.restore(sess, model_save_path)
-    train_model(sess)
+def main(argv=None):
+    with tf.Session() as sess:
+        if FLAGS.run == 'continue':
+            network.init.run()
+        elif FLAGS.run == 'restart':
+            saver.restore(sess, model_save_path)
+        train_model(sess)
+
+if __name__ == "__main__":
+    tf.app.run()
