@@ -7,9 +7,8 @@ import model
 import input_data
 import blurrer
 
-# ---------- Here choose your model ----------
-# import conv_decov_model as model
-import cnn_trial_model as model
+
+from model_definitions import cnn_trial_model as model
 
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('run', 'restart',
