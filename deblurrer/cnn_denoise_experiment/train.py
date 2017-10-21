@@ -50,12 +50,14 @@ def train_model(sess):
         saver.save(sess, model_save_path)
 
 
-# Run training / viewing
+# Run continue training / restart training
 def main(argv=None):
     with tf.Session() as sess:
         if FLAGS.run == 'continue':
-            network.init.run()
+            saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':
+            network.init.run()
+        else:
             saver.restore(sess, model_save_path)
         train_model(sess)
 
