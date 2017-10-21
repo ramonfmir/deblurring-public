@@ -9,4 +9,4 @@ install:
 script:
   # Style checks.
   - for f in $(find . -name '*.py'); do pycodestyle --first $f; done
-  - python3 deblurrer/cnn_noise_experiment/train.py restart
+  - python3 deblurring/deblurrer/cnn_noise_experiment/train.py restart
