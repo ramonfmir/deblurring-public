@@ -3,7 +3,7 @@ import tensorflow.contrib.layers as lays
 import tensorflow as tf
 import numpy as np
 from skimage import transform
-import model
+from .model import Model
 
 # Parameters
 channels = 1
@@ -49,4 +49,4 @@ def initialise(image_width, image_height, lr=0.01):
     tf.summary.image("deblurred", deblurred)
     summary_op = tf.summary.merge_all()
 
-    return model.Model(train_op, cost, original, corrupted, deblurred, summary_op, init)
+    return Model(train_op, cost, original, corrupted, deblurred, summary_op, init)
