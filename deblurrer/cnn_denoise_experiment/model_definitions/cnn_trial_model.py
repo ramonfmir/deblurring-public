@@ -7,7 +7,6 @@ from .model import Model
 
 # Parameters
 channels = 1
-corruption_level = 0.2
 
 def autoencoder(inputs):
     # encoder
@@ -23,15 +22,17 @@ def autoencoder(inputs):
     # 16 x 16 x 32  ->  32 x 32 x 1
     net = lays.conv2d_transpose(net, 16, [5, 5], stride=1, padding='SAME')
     net = lays.conv2d_transpose(net, 32, [5, 5], stride=2, padding='SAME')
-    net = lays.conv2d_transpose(net, channels, [5, 5], stride=3, padding='SAME', activation_fn=tf.nn.tanh)
+    net = lays.conv2d_transpose(net, channels, [5, 5], stride=3, padding='SAME', activation_fn=tf.nn.relu)
     return net
 
 def initialise(image_width, image_height, lr=0.01):
-    original = tf.placeholder(tf.float32, (None, image_height, image_width, 3))  # input to the network (MNIST images)
+    # original, unblurred image to the network (MNIST images)
+    original = tf.placeholder(tf.float32, (None, image_height, image_width, 3))
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
     tf.summary.image('original_greyscale', original_greyscale)
 
-    corrupted = tf.placeholder(tf.float32, (None, image_height, image_width, 3))  # input to the network (MNIST images)
+    # blurred image, input to the network (MNIST images)
+    corrupted = tf.placeholder(tf.float32, (None, image_height, image_width, 3))
     corrupted_greyscale = tf.reduce_mean(corrupted, axis=3,keep_dims = True)
     tf.summary.image('corrupted_greyscale', corrupted_greyscale)
 

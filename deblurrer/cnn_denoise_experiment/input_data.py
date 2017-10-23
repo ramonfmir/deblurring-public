@@ -3,6 +3,7 @@ import cv2
 import os
 import glob
 import numpy as np
+import random
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory
@@ -24,8 +25,28 @@ def load_images(train_path, image_size_x,image_size_y):
         images.append(image)
         flbase = os.path.basename(fl)
         img_names.append(flbase)
-    images = np.array(images)
-    img_names = np.array(img_names)
+    random.shuffle(images)
     # images: List of images in Array form;
     # img_names: The list of corresponding image file name;
-    return images, img_names
+    return data_set(images, 0.99)
+
+class data_set(object):
+    def __init__(self, imgs, train_set_perc):
+        self.imgs = imgs
+        self.train_set_perc = train_set_perc
+        self.train_set_pointer = 0
+
+    def next_batch(self, batch_size):
+        batch_start_index = self.train_set_pointer
+        batch_end_index = batch_start_index + batch_size
+        if (batch_end_index> len(self.imgs)):
+            batch_start_index = 0
+            batch_end_index = batch_start_index + batch_size
+            self.train_set_pointer = 0
+        else:
+            self.train_set_pointer = batch_end_index
+        batch = self.imgs[batch_start_index:batch_end_index]
+        if self.train_set_pointer == 0:
+            random.shuffle(self.imgs)
+        print(np.asarray(batch).shape)
+        return np.asarray(batch)

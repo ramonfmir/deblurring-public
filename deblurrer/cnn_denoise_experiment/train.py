@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
 import scipy
 import input_data
@@ -8,12 +7,11 @@ import blurrer
 import os
 import glob
 
-
 from model_definitions import cnn_trial_model as model
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('run', 'restart',
+tf.app.flags.DEFINE_string('run', 'continue',
                             "Which operation to run. [continue|restart]")
 
 # Paths
@@ -34,9 +32,8 @@ alpha = 0.01
 network = model.initialise(image_width, image_height, alpha)
 
 # Load data
-image_data, _ = input_data.load_images(dataset_path, image_width,image_height)
-num_train = int(0.996 * len(image_data))
-trX, teX = image_data[:num_train], image_data[num_train:]
+image_data = input_data.load_images(dataset_path, image_width,image_height)
+batch_per_ep = len(image_data.imgs) // batch_size
 
 # Logging
 saver = tf.train.Saver()
@@ -49,8 +46,8 @@ writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 def train_model(sess):
     count = 0
     for i in range(num_iter):
-        for start, end in zip(range(0, len(trX), batch_size), range(batch_size, len(trX), batch_size)):
-            input_ = trX[start:end]
+        for batch_n in range(batch_per_ep):
+            input_ = image_data.next_batch(batch_size)
             blurred = blurrer.blur_all(input_) # (100, img)
             _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
             count += 1
