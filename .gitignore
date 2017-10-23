@@ -3,6 +3,10 @@
 # Mac OS
 .DS_Store
 
+# Datasets
+data/4000unlabeledLP_same_dims_scaled
+trained_models
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

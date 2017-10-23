@@ -26,7 +26,8 @@ def process_dataset(new_dataset_path, dataset_img_ext, process):
         new_im = process(old_im)
         new_im.save(new_dataset_path + os.path.basename(file) + "." + dataset_img_ext, img_type)
 
-max_size = get_max_dims(dataset_path, dataset_img_ext)
+# max_size = get_max_dims(dataset_path, dataset_img_ext)
+max_size = 270, 90
 
 def pad_with_black(old_im):
     old_size = old_im.size

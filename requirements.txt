@@ -1,1 +1,6 @@
 pycodestyle
+tensorflow
+matplotlib
+numpy
+scikit-image
+opencv-python
