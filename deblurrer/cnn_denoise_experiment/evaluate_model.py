@@ -1,51 +1,48 @@
 import tensorflow as tf
-import conv_decov_model as model
+import sys
+sys.path.insert(0, './model_definitions/')
+import cnn_trial_model as model
 # from tensorflow.examples.tutorials.mnist import input_data
-import input_data as input_data #input_data
+import input_data
 import numpy as np
+import blurrer
 import matplotlib.pyplot as plt
+from skimage import color
+import scipy.misc
+import glob
 
 # Paths
-model_save_path = './trained_models_emnist/autoencoder_model' # './trained_models/autoencoder_model'
-mnist_data_path = './EMNIST_data/' # './MNIST_data/'
+model_save_path = './trained_models/deblurring_model' # './trained_models/autoencoder_model'
+dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
+images_path = './results/'
 
 # Parameters
 corruption_level = 0.3
+image_width = 270
+image_height = 90
 
 # Method to show results visually
-def show_encoding(sess, i):
-    digit = teX[i]
-    images = np.array([digit])
-    plt.imshow(digit.reshape((28, 28)), cmap='gray')
-    plt.show()
+def show_encoding(sess, imgs, network):
+    blurred = blurrer.blur_all(imgs)
+    print(np.shape(blurred))
+    recon_img = sess.run([network.deblurred], feed_dict={network.corrupted: blurred})[0]
 
-    noise_mask = np.random.binomial(1, 1 - corruption_level, images.shape)
-
-    plt.imshow((noise_mask * images).reshape((28, 28)), cmap='gray')
-    plt.show()
-
-    reconstructed = sess.run(model.deblurred, feed_dict={model.original: images,
-                                                        model.corrupted: noise_mask * images})
-
-    plt.imshow(reconstructed.reshape((28, 28)), cmap='gray')
-    plt.show()
+    for i in range(len(imgs)):
+        scipy.misc.imsave(images_path + 'deblurred.jpg', recon_img[i, ..., 0])
+        scipy.misc.imsave(images_path + 'blurred.jpg', blurred[i])
+        scipy.misc.imsave(images_path + 'original.jpg', imgs[i])
 
 # Evaluate model
 with tf.Session() as sess:
-    saver = tf.train.Saver()
+    # Load graph
+    network = model.initialise(image_width, image_height)
 
-    # tf.initialize_all_variables().run()
+    saver = tf.train.Saver()
     saver.restore(sess, model_save_path)
 
     # Load MNIST data
-    mnist = input_data.read_data_sets(mnist_data_path, one_hot=True)
-    trX, trY, teX, teY = mnist.train.images, mnist.train.labels, mnist.test.images, mnist.test.labels
-
-    # Evaluate model on noisy data
-    noise_mask = np.random.binomial(1, 1 - corruption_level, teX.shape)
-    print('Cost: ', sess.run(model.cost, feed_dict={model.original: teX, model.corrupted: noise_mask * teX}))
+    test_images, _ = input_data.load_images(dataset_path, image_width,image_height)
+    test_images = test_images[:10]
 
     # Test images used for examples in README
-    indices = range(20, 30)
-    for x in indices:
-        show_encoding(sess, x)
+    show_encoding(sess, test_images, network)
