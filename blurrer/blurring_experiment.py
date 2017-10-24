@@ -29,7 +29,7 @@ def median_blur(k_size, img):
 # Bilateral Filtering. This takes in two parameters, the sigma colour and the 
 # sigma size (essentially kernel size). The sigma colour parameter determines
 # how much colours are mixed in each kernel.
-def bilateral_blur(s_colour, k_size, img):
+def bilateral_blur(k_size, s_colour, img):
     # Default a larger kernel size value because of how the function works. 
     # In the doc it is mentioned that k_size < 10 (which would be a typical
     # input) the function has no effect.
@@ -54,22 +54,34 @@ def apply_blurs_randomly(blurs, img):
     return img
 
 if __name__ == "__main__":
-    img_name  = sys.argv[1]
-    kernel_s  = int(sys.argv[2])
-    averaging = int(sys.argv[3])
-    gaussian  = int(sys.argv[4])
-    median    = int(sys.argv[5])
-    bilateral = int(sys.argv[6])
-    motion    = int(sys.argv[7])
+    img_name   = sys.argv[1]
+    # Kernel size for averaging blur.
+    averaging_k = int(sys.argv[2])
+    # Kernel size for gaussian blur.
+    gaussian_k  = int(sys.argv[3])
+    # Standard Deviation for gaussian blur.
+    gaussian_s  = int(sys.argv[4])
+    # Kernel size for median blur
+    median_k    = int(sys.argv[5])
+    # Kernel size for bilateral blur.
+    bilateral_k = int(sys.argv[6])
+    # Sigma colour for bilateral blur.
+    bilateral_c = int(sys.argv[7])
+    # Kernel size for motion blur.
+    motion_k    = int(sys.argv[8])
+    # TODO
+    # Direction for motion blur. 
+    # motion_d    = float(sys.argv[9])
 
     img = cv2.imread(img_name)
-    averaging_b = partial(averaging_blur, averaging)
-    median_b    = partial(median_blur, median)
-    gaussian_b  = partial(gaussian_blur, gaussian, 3)
-    bilateral_b = partial(bilateral_blur, bilateral, 10)
-    motion_b    = partial(motion_blur, motion, 'H')
 
-    blurs = [averaging_b, gaussian_b, bilateral_b, motion_b]
+    averaging_b = partial(averaging_blur, averaging_k)
+    median_b    = partial(median_blur, median_k)
+    gaussian_b  = partial(gaussian_blur, gaussian_k, gaussian_s)
+    bilateral_b = partial(bilateral_blur, bilateral_k, bilateral_c)
+    motion_b    = partial(motion_blur, motion_k, 'H')
+
+    blurs = [averaging_b, median_b, gaussian_b, bilateral_b, motion_b]
 
     img = apply_blurs_randomly(blurs, img)
 
