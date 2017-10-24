@@ -30,7 +30,7 @@ num_iter = 10
 alpha = 0.01
 
 # Load the model
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, alpha)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
