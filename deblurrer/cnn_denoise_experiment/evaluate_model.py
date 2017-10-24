@@ -2,7 +2,6 @@ import tensorflow as tf
 import sys
 sys.path.insert(0, './model_definitions/')
 import cnn_trial_model as model
-# from tensorflow.examples.tutorials.mnist import input_data
 import input_data
 import numpy as np
 import blurrer

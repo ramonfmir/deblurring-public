@@ -6,12 +6,12 @@ from skimage import transform
 from .model import Model
 
 def initialise(image_width, image_height, autoencoder, lr=0.01):
-    # original, unblurred image to the network (MNIST images)
+    # original, unblurred image to the network
     original = tf.placeholder(tf.float32, (None, image_height, image_width, 3))
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
     tf.summary.image('original_greyscale', original_greyscale)
 
-    # blurred image, input to the network (MNIST images)
+    # blurred image, input to the network
     corrupted = tf.placeholder(tf.float32, (None, image_height, image_width, 3))
     corrupted_greyscale = tf.reduce_mean(corrupted, axis=3,keep_dims = True)
     tf.summary.image('corrupted_greyscale', corrupted_greyscale)
