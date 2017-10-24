@@ -7,7 +7,8 @@ import blurrer
 import os
 import glob
 
-from model_definitions import cnn_trial_model as model
+from model_definitions import autoencoder_model as model
+from model_definitions import cnn_basic as autoencoder_network
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
@@ -29,7 +30,7 @@ num_iter = 10
 alpha = 0.01
 
 # Load the model
-network = model.initialise(image_width, image_height, alpha)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, alpha)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)

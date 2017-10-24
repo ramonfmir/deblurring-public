@@ -48,5 +48,4 @@ class data_set(object):
         batch = self.imgs[batch_start_index:batch_end_index]
         if self.train_set_pointer == 0:
             random.shuffle(self.imgs)
-        print(np.asarray(batch).shape)
         return np.asarray(batch)
