@@ -2,8 +2,8 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
+import cv2
 import input_data
-import blurrer
 import os
 import glob
 
@@ -48,8 +48,14 @@ def train_model(sess):
     count = 0
     for i in range(num_iter):
         for batch_n in range(batch_per_ep):
-            input_ = image_data.next_batch(batch_size)
-            blurred = blurrer.blur_all(input_) # (100, img)
+            input_,blurred = image_data.next_batch(batch_size)
+            """ If debug, use the below code
+            """
+            # for i in range(0,len(blurred)):
+            #     cv2.imshow('Blur', blurred[i])
+            #     cv2.imshow('original', input_[i])
+            #     cv2.waitKey(0)
+            #     cv2.destroyAllWindows()
             _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
             count += 1
             writer.add_summary(summary, count)

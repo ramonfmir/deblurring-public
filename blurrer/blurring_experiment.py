@@ -20,24 +20,24 @@ def gaussian_blur(k_size, s_div, img):
     img = cv2.GaussianBlur(img, (k_size, k_size), s_div)
     return img
 
-# Median Blur. This assumes a square kernel of size k_size and replaces each 
+# Median Blur. This assumes a square kernel of size k_size and replaces each
 # pixel with the median value of its neighboring pixels.
 def median_blur(k_size, img):
     img = cv2.medianBlur(img, k_size)
     return img
 
-# Bilateral Filtering. This takes in two parameters, the sigma colour and the 
+# Bilateral Filtering. This takes in two parameters, the sigma colour and the
 # sigma size (essentially kernel size). The sigma colour parameter determines
 # how much colours are mixed in each kernel.
 def bilateral_blur(k_size, s_colour, img):
-    # Default a larger kernel size value because of how the function works. 
+    # Default a larger kernel size value because of how the function works.
     # In the doc it is mentioned that k_size < 10 (which would be a typical
     # input) the function has no effect.
     k_size = 75 if k_size < 75 else  k_size;
     img = cv2.bilateralFilter(img, s_colour, k_size, k_size)
     return img
 
-# Motion Blur. 
+# Motion Blur.
 def motion_blur(k_size, motion_direction, img):
     kernel_motion_blur = np.zeros((k_size, k_size))
     if (motion_direction == 'H'):
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     # Kernel size for motion blur.
     motion_k    = int(sys.argv[8])
     # TODO
-    # Direction for motion blur. 
+    # Direction for motion blur.
     # motion_d    = float(sys.argv[9])
 
     img = cv2.imread(img_name)
@@ -88,3 +88,25 @@ if __name__ == "__main__":
     cv2.imshow('Blur', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+# from skimage import color
+# import numpy as np
+# from scipy.ndimage.filters import gaussian_filter
+#
+# def motion_blur(img):
+#     return img
+#
+# def sensor_blur(img):
+#     return img
+#
+# def optical_blur(img):
+#     filtered_gray = gaussian_filter(color.rgb2gray(img), sigma = 5)
+#     return color.gray2rgb(filtered_gray)
+#
+# def blur_all(imgs):
+#     return np.asarray([optical_blur(img) for img in imgs])
+#
+#
+# def add_noise(img):
+#     noise_mask = np.random.binomial(1, 1 - corruption_level, img.shape)
+#     return noise_mask * img

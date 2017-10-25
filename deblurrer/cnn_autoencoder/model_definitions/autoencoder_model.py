@@ -1,8 +1,5 @@
-import tensorflow.contrib.layers as lays
-
 import tensorflow as tf
 import numpy as np
-from skimage import transform
 from .model import Model
 
 def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01):
