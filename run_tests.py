@@ -23,15 +23,15 @@ def run_tests(compute_coverage):
 			failed_modules.append(module)
 
 	if compute_coverage:
-        coverage_files = [app + '.coverage' for module in modules]
-        subprocess.call(['coverage', 'combine'] + coverage_files, cwd=base_dir)
+		coverage_files = [module + '.coverage' for module in modules]
+		subprocess.call(['coverage', 'combine'] + coverage_files, cwd=base_dir)
 
-    if failed_modules:
-    	print('The module(s) %s failed some tests' % ', '.join(failed_modules))
-        return 1
-    else:
-    	print('All tests ran successfully.')
-    	return 0
+	if failed_modules:
+		print('The module(s) %s failed some tests' % ', '.join(failed_modules))
+		return 1
+	else:
+		print('All tests ran successfully.')
+		return 0
 
 
 if __name__ == "__main__":
