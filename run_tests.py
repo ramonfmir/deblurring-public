@@ -1,30 +1,22 @@
 import os
 import sys
-import subprocess
+import unittest
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 modules = ("blurrer/", "deblurrer/")
 
-def run_tests(compute_coverage):
+def run_tests():
+	runner = unittest.TextTestRunner()
+
 	failed_modules = []
+
 	for module in modules:
 		module_dir = os.path.join(base_dir, module)
+		suite = unittest.loader.TestLoader().discover(module_dir + "tests/")
+		exit_code = runner.run(suite).wasSuccessful()
 
-		if compute_coverage:
-			result = subprocess.call(['coverage', 
-									  'run', 
-									  '--concurrency=eventlet', 
-									  '--source=',  'tests'], cwd=module_dir)
-		else:
-			result = subprocess.call([sys.executable, 'tests'], cwd=module_dir)
-
-		if result != 0:
-			print('Tests failed: '.format(result))
-			failed_modules.append(module)
-
-	if compute_coverage:
-		coverage_files = [module + '.coverage' for module in modules]
-		subprocess.call(['coverage', 'combine'] + coverage_files, cwd=base_dir)
+		if not exit_code:
+			 failed_modules.append(module)
 
 	if failed_modules:
 		print('The module(s) %s failed some tests' % ', '.join(failed_modules))
@@ -35,5 +27,4 @@ def run_tests(compute_coverage):
 
 
 if __name__ == "__main__":
-	compute_coverage = '--coverage' in sys.argv
-	sys.exit(run_tests(compute_coverage))
+	sys.exit(run_tests())
