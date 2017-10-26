@@ -17,7 +17,7 @@ tf.app.flags.DEFINE_string('run', 'continue',
 
 # Paths
 model_save_path = './trained_models/deblurring_model'
-dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
+dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
 logs_directory = './logs/'
 
 # Parameters
