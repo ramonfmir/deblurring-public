@@ -8,7 +8,7 @@ import os
 import glob
 
 from model_definitions import autoencoder_model as model
-from model_definitions import cnn_basic as autoencoder_network
+from model_definitions import threeD_cnn_relu as autoencoder_network
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
@@ -23,7 +23,7 @@ logs_directory = './logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 100
+batch_size = 25
 num_iter = 10
 
 # Hyperparameters
