@@ -1,5 +1,5 @@
 pycodestyle
-coveralls
+codecov
 coverage
 tensorflow
 matplotlib
