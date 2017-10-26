@@ -1,4 +1,6 @@
 pycodestyle
+coveralls
+coverage
 tensorflow
 matplotlib
 numpy

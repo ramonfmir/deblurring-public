@@ -10,8 +10,15 @@ install:
   - pip3 install -r requirements.txt
 
 script:
-  # Style checks.
-  - for f in $(find . -name '*.py'); do pycodestyle --first $f; done
+  # Tests.
+  - python3 -m coverage run --source=. -m run_tests
+
   # Train neural network and send results.
   - python3 deblurrer/cnn_denoise_experiment/train.py restart >> output.txt
   - ./slack_file_upload output.txt "#performance-metrics"
+
+  # Style checks.
+  - for f in $(find . -name '*.py'); do pycodestyle --first $f; done
+
+after_success:
+  - coveralls
