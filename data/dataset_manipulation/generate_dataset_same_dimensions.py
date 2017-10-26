@@ -38,5 +38,5 @@ def pad_with_black_and_scale(im):
 if __name__ == "__main__":
     new_path = os.path.abspath(dataset_directory_path) + "/4000unlabeledLP_same_dims_scaled/"
     os.makedirs(new_path)
-    
+
     process_dataset(new_path, dataset_img_ext, pad_with_black_and_scale)
