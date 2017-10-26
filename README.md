@@ -1,6 +1,7 @@
 # Deblurring
 
-[![Build Status](https://travis-ci.com/qvks/deblurring.svg?token=fTTycZszr1xwSx4deq7e&branch=master)](https://travis-ci.com/qvks/deblurring)
+[![Build Status](https://travis-ci.com/qvks/deblurring.svg?token=fTTycZszr1xwSx4deq7e&branch=master)](https://travis-ci.com/qvks/deblurring) [![codecov](https://codecov.io/gh/ramonfmir/deblurring/branch/master/graph/badge.svg?token=54QoaHZuqI)](https://codecov.io/gh/ramonfmir/deblurring)
+
 
 Project used for:
 
@@ -24,13 +25,7 @@ Follow these steps to make sure that you can run our code locally:
 
 2. Install Python 3.6 or later. Simply run `sudo apt-get install python3.6`.
 
-3. Create a virtual environment. We recommend [virtualenvwrapper](http://virtualenvwrapper.readthedocs.io/en/latest/index.html), which is used as follows:
-
-    3.1. Run `mkvirtualenv -a path/to/deblurring deblurring` the first time.  If you are using multiple versions of Python, make sure you specify it by adding `--python=/path/to/python3.6`.
-
-    3.2. Once you've run it once, type `workon deblurring` every time you want to run it again.
-
-4. Upgrade `pip` and install the rest of the requirements by typing `pip install -r requirements.txt`.
+3. Upgrade `pip3` and install the rest of the requirements by typing `pip3 install -r requirements.txt`.
 
 
 ## Running locally
