@@ -33,6 +33,6 @@ Follow these steps to make sure that you can run our code locally:
 Not so exciting at the moment. You can do a few things though. An example would be running:
 
 * `python3 data/dataset_manipulation/generate_dataset_same_dimensions.py`
-* `python3 deblurrer/cnn_denoise_experiment/train.py restart`
+* `python3 deblurrer/cnn_denoise_experiment/train.py --run restart`
 
 This should train our neural network.
