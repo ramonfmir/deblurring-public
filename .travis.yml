@@ -19,7 +19,7 @@ script:
 
   # Train neural network and send results.
   - python3 data/dataset_manipulation/generate_dataset_same_dimensions.py
-  - python3 deblurrer/cnn_autoencoder/train.py --run restart | tee output.txt
+  - python3 deblurrer/cnn_autoencoder/train.py --run restart
 
   - ./slack_file_upload output.txt "#performance-metrics"
 
