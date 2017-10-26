@@ -45,6 +45,7 @@ writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 
 # Train on training data, every epoch evaluate with same evaluation data
 def train_model(sess):
+    output = open("output.txt", "w")
     count = 0
     for i in range(num_iter):
         for batch_n in range(batch_per_ep):
@@ -59,10 +60,14 @@ def train_model(sess):
             _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
             count += 1
             writer.add_summary(summary, count)
-            print('Epoch: {} - cost= {:.8f}'.format(i, cost))
+
+            epoch_cost = 'Epoch: {} - cost= {:.8f}'.format(i, cost)
+            output.write(epoch_cost + '\n')
+            print(epoch_cost)
 
         saver.save(sess, model_save_path)
 
+    output.close()
 
 # Run continue training / restart training
 def main(argv=None):
