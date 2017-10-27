@@ -8,23 +8,24 @@ import os
 import glob
 
 from model_definitions import autoencoder_model as model
-from model_definitions import threeD_cnn_relu as autoencoder_network
+from model_definitions import tutorial_cnn as autoencoder_network
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('run', 'continue',
                             "Which operation to run. [continue|restart]")
+tf.app.flags.DEFINE_string('num_iter', 100,
+                            "How many iterations to run.")
 
 # Paths
 model_save_path = './trained_models/deblurring_model'
-dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
+dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
 logs_directory = './logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
 batch_size = 25
-num_iter = 10
 
 # Hyperparameters
 alpha = 0.01
@@ -35,6 +36,9 @@ network = model.initialise(image_width, image_height, autoencoder_network.autoen
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
 batch_per_ep = len(image_data.imgs) // batch_size
+if (len(image_data.imgs) == 0):
+    e = 'No images were loaded - likely cause is wrong path: ' + dataset_path
+    raise Exception(e)
 
 # Logging
 saver = tf.train.Saver()
@@ -44,19 +48,12 @@ for f in files:
 writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 
 # Train on training data, every epoch evaluate with same evaluation data
-def train_model(sess):
+def train_model(sess, num_iter):
     output = open("output.txt", "w")
     count = 0
     for i in range(num_iter):
         for batch_n in range(batch_per_ep):
             input_,blurred = image_data.next_batch(batch_size)
-            """ If debug, use the below code
-            """
-            # for i in range(0,len(blurred)):
-            #     cv2.imshow('Blur', blurred[i])
-            #     cv2.imshow('original', input_[i])
-            #     cv2.waitKey(0)
-            #     cv2.destroyAllWindows()
             _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
             count += 1
             writer.add_summary(summary, count)
@@ -78,7 +75,7 @@ def main(argv=None):
             network.init.run()
         else:
             saver.restore(sess, model_save_path)
-        train_model(sess)
+        train_model(sess, int(FLAGS.num_iter))
 
 if __name__ == "__main__":
     tf.app.run()
