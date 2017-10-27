@@ -4,12 +4,12 @@ from .model import Model
 
 def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01):
     # original, unblurred image to the network
-    original = tf.placeholder(tf.float32, (None, image_height, image_width, 3))
+    original = tf.placeholder(tf.float32, (batch_size, image_height, image_width, 3))
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
     tf.summary.image('original_greyscale', original_greyscale)
 
     # blurred image, input to the network
-    corrupted = tf.placeholder(tf.float32, (None, image_height, image_width, 3))
+    corrupted = tf.placeholder(tf.float32, (batch_size, image_height, image_width, 3))
     corrupted_greyscale = tf.reduce_mean(corrupted, axis=3,keep_dims = True)
     tf.summary.image('corrupted_greyscale', corrupted_greyscale)
 
@@ -18,7 +18,6 @@ def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01):
     # calculate the loss and optimize the network
     cost = tf.reduce_mean(tf.square(deblurred - original_greyscale))  # claculate the mean square error loss
     train_op = tf.train.AdamOptimizer(learning_rate=lr).minimize(cost)
-
     # initialize the network
     init = tf.global_variables_initializer()
 

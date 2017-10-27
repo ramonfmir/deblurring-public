@@ -8,11 +8,8 @@ np.set_printoptions(threshold=np.inf)
 import scipy.misc as sc
 import random
 from skimage import color
-import blurrer.blurring_experiment as blurrer
 from functools import partial
-import tensorflow as tf
-
-# from ..blurrer import blurring_experiment
+from blurrer import blurring_experiment as blurrer
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory
