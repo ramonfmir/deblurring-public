@@ -8,7 +8,6 @@ import os
 import glob
 
 from model_definitions import autoencoder_model as model
-from model_definitions import tutorial_cnn as autoencoder_network
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
@@ -16,6 +15,8 @@ tf.app.flags.DEFINE_string('run', 'continue',
                             "Which operation to run. [continue|restart]")
 tf.app.flags.DEFINE_string('num_iter', 100,
                             "How many iterations to run.")
+tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
+                            "The name of the model in the model_definitions module")
 
 # Paths
 model_save_path = './trained_models/deblurring_model'
@@ -31,6 +32,11 @@ batch_size = 25
 alpha = 0.01
 
 # Load the model
+import importlib.util
+spec = importlib.util.spec_from_file_location("model_definitions", "model_definitions/" + FLAGS.model_name + ".py")
+autoencoder_network = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(autoencoder_network)
+
 network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
 
 # Load data
