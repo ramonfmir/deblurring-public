@@ -38,11 +38,13 @@ def bilateral_blur(k_size, s_colour, img):
     return img
 
 # Motion Blur.
-def motion_blur(k_size, motion_direction, img):
+def motion_blur(k_size, motion_direction, blur_magnitude, img):
     kernel_motion_blur = np.zeros((k_size, k_size))
     if (motion_direction == 'H'):
         kernel_motion_blur[:, int((k_size - 1) / 2)] = np.ones(k_size)
-        kernel_motion_blur = kernel_motion_blur / k_size
+    elif (motion_direction == 'V'):
+        kernel_motion_blur[ int((k_size - 1) / 2),:] = np.ones(k_size)
+    kernel_motion_blur = kernel_motion_blur / k_size
     img = cv2.filter2D(img, -1, kernel_motion_blur)
     return img
 
@@ -89,24 +91,4 @@ if __name__ == "__main__":
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# from skimage import color
-# import numpy as np
-# from scipy.ndimage.filters import gaussian_filter
-#
-# def motion_blur(img):
-#     return img
-#
-# def sensor_blur(img):
-#     return img
-#
-# def optical_blur(img):
-#     filtered_gray = gaussian_filter(color.rgb2gray(img), sigma = 5)
-#     return color.gray2rgb(filtered_gray)
-#
-# def blur_all(imgs):
-#     return np.asarray([optical_blur(img) for img in imgs])
-#
-#
-# def add_noise(img):
-#     noise_mask = np.random.binomial(1, 1 - corruption_level, img.shape)
-#     return noise_mask * img
+    

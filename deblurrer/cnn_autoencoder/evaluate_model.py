@@ -1,7 +1,10 @@
 import tensorflow as tf
 import sys
 sys.path.insert(0, './model_definitions/')
-import cnn_trial_model as model
+
+from model_definitions import autoencoder_model as model
+from model_definitions import cnn_basic as autoencoder_network
+
 import input_data
 import numpy as np
 import blurrer
@@ -9,6 +12,8 @@ import matplotlib.pyplot as plt
 from skimage import color
 import scipy.misc
 import glob
+sys.path.insert(0, "../..")
+import blurrer.blurring_experiment as blurrer
 
 # Paths
 model_save_path = './trained_models/deblurring_model' # './trained_models/autoencoder_model'
@@ -21,9 +26,7 @@ image_width = 270
 image_height = 90
 
 # Method to show results visually
-def show_encoding(sess, imgs, network):
-    blurred = blurrer.blur_all(imgs)
-    print(np.shape(blurred))
+def show_encoding(sess, original, blurred, network):
     recon_img = sess.run([network.deblurred], feed_dict={network.corrupted: blurred})[0]
 
     for i in range(len(imgs)):
@@ -40,8 +43,8 @@ with tf.Session() as sess:
     saver.restore(sess, model_save_path)
 
     # Load MNIST data
-    test_images, _ = input_data.load_images(dataset_path, image_width,image_height)
-    test_images = test_images[:10]
+    image_data = input_data.load_images(dataset_path, image_width,image_height)
+    test_ori_images, test_corr_images = image_data.next_batch(10)
 
     # Test images used for examples in README
-    show_encoding(sess, test_images, network)
+    show_encoding(sess, test_images, test_corr_images, network)
