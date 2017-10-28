@@ -82,6 +82,6 @@ class data_set(object):
         return f
 
     def blur_data_set(self, original_batch):
-        kernel = self.motion_blur_kernel(9,20)
+        kernel = self.motion_blur_kernel(int(random.gauss(23, 0.5)),random.randint(1,359))
         corrupted = [cv2.filter2D(img,-1,kernel) for img in original_batch]
         return corrupted
