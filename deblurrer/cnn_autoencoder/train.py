@@ -6,6 +6,7 @@ import cv2
 import input_data
 import os
 import glob
+import importlib.util
 
 from model_definitions import autoencoder_model as model
 
@@ -32,8 +33,8 @@ batch_size = 25
 alpha = 0.01
 
 # Load the model
-import importlib.util
-spec = importlib.util.spec_from_file_location("model_definitions", "model_definitions/" + FLAGS.model_name + ".py")
+model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/" + FLAGS.model_name + ".py"
+spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
