@@ -6,6 +6,7 @@ import cv2
 import input_data
 import os
 import glob
+import importlib.util
 
 from model_definitions import autoencoder_model as model
 
@@ -20,7 +21,7 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = './trained_models/deblurring_model'
-dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
+dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
 logs_directory = './logs/'
 
 # Parameters
@@ -32,8 +33,8 @@ batch_size = 40
 alpha = 0.005
 
 # Load the model
-import importlib.util
-spec = importlib.util.spec_from_file_location("model_definitions", "model_definitions/" + FLAGS.model_name + ".py")
+model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/" + FLAGS.model_name + ".py"
+spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
