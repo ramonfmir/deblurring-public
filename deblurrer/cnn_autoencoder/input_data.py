@@ -1,11 +1,12 @@
 import sys
-sys.path.append("../..")
+sys.path.insert(0, "../..")
 import cv2
 import os
 import glob
 import numpy as np
+np.set_printoptions(threshold=np.inf)
+import scipy.misc as sc
 import random
-
 from skimage import color
 from functools import partial
 from blurrer import blurring_experiment as blurrer
@@ -40,14 +41,11 @@ class data_set(object):
         self.imgs = imgs
         self.train_set_pointer = 0
         kernel_size = 5
-        averaging_b = partial(blurrer.averaging_blur, kernel_size)
-        median_b    = partial(blurrer.median_blur, kernel_size)
-        gaussian_b  = partial(blurrer.gaussian_blur, kernel_size, 0.05)
         bilateral_b = partial(blurrer.bilateral_blur, kernel_size,  10)
-        motion_b    = partial(blurrer.motion_blur, kernel_size, 'H')
+        motion_b_H    = partial(blurrer.motion_blur, 14, 'H', 2)
+        motion_b_V    = partial(blurrer.motion_blur, 9, 'V', 2)
 
-        self.blur_func_set = [averaging_b, median_b, gaussian_b, bilateral_b, motion_b]
-
+        self.blur_func_set = [motion_b_H,motion_b_V, bilateral_b]
 
     # next_batch retunr tuple of unblurred image and corrupted image with set
     # blurring parameters
@@ -65,8 +63,25 @@ class data_set(object):
             random.shuffle(self.imgs)
         return np.asarray(batch), np.asarray(self.blur_data_set(batch))
 
+    """ create motion blur kernel. lens = strength of blur, theta = angle of blur
+    """
+    def motion_blur_kernel(self,lens,theta):
+        # https://sourceforge.net/p/octave/image/ci/default/tree/inst/fspecial.m#l379
+        if(lens < 1):
+            lens = 9
+        if (np.mod(lens, 2) == 1):
+            sze = [lens, lens]
+        else:
+            sze = [lens+1, lens+1]
+        ## First generate a horizontal line across the middle
+        f = np.zeros(sze)
+        f[int(np.floor(lens/2))][0:lens] = 1
+        # Then rotate to specified angle
+        f = sc.imrotate(f,theta)
+        f = f / np.sum(f);
+        return f
+
     def blur_data_set(self, original_batch):
-        #TODO
-        #More predicatble blur data, move blur set generation to blurrer.py
-        corrupted = [blurrer.apply_blurs_randomly(self.blur_func_set, img) for img in original_batch]
+        kernel = self.motion_blur_kernel(int(random.gauss(23, 0.5)),random.randint(1,359))
+        corrupted = [cv2.filter2D(img,-1,kernel) for img in original_batch]
         return corrupted
