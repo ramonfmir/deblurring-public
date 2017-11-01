@@ -9,7 +9,7 @@ import scipy.misc as sc
 import random
 from skimage import color
 from functools import partial
-from blurrer import blurring_experiment as blurrer
+from blurrer import blurrer
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory

@@ -5,12 +5,13 @@
 
 # Datasets
 data/4000*
+data/100*
 trained_models
 
 #logs
 deblurrer/cnn_autoencoder/logs
 deblurrer/cnn_autoencoder/output.txt
-logs/
+*logs/
 output.txt
 
 ### Python ###
