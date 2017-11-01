@@ -7,6 +7,9 @@ python:
 env:
   - PYTHONPATH=.
 
+addons:
+  ssh_known_hosts: 40.121.49.164
+
 # Install dependencies.
 install:
   - sudo apt-get install sshpass
