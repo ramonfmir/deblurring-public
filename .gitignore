@@ -11,7 +11,7 @@ trained_models
 #logs
 deblurrer/cnn_autoencoder/logs
 deblurrer/cnn_autoencoder/output.txt
-logs/
+*logs/
 output.txt
 
 ### Python ###
