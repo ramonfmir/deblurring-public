@@ -5,6 +5,7 @@
 
 # Datasets
 data/4000*
+data/100*
 trained_models
 
 #logs
