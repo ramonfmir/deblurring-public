@@ -32,6 +32,6 @@ after_success:
   # Upload to azure.
   - az login -u rf1515@ic.ac.uk -p cpOO9506
   - az vm start -g frobenius -n deblurrer
-  - sleep 20
+  - sleep 60
   - sshpass -p cpOO9506Legan ssh zippo@40.121.49.164 './deblurring/run.sh'
   - az vm stop -g frobenius -n deblurrer
