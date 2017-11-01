@@ -4,16 +4,12 @@ language: python
 python:
   - 3.6
 
-addons:
-    apt:
-        packages:
-            - sshpass
-
 env:
   - PYTHONPATH=.
 
 # Install dependencies.
 install:
+  - sudo apt-get install sshpass
   - pip3 install --upgrade pip
   - pip3 install -r requirements_travis.txt
   - pip3 install --pre azure-cli --extra-index-url https://azurecliprod.blob.core.windows.net/edge
