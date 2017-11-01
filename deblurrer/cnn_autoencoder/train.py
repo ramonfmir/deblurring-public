@@ -27,10 +27,10 @@ logs_directory = './logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 25
+batch_size = 40
 
 # Hyperparameters
-alpha = 0.01
+alpha = 0.005
 
 # Load the model
 model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/" + FLAGS.model_name + ".py"
@@ -60,7 +60,7 @@ def train_model(sess, num_iter):
     count = 0
     for i in range(num_iter):
         for batch_n in range(batch_per_ep):
-            input_,blurred = image_data.next_batch(batch_size)
+            input_, blurred = image_data.next_batch(batch_size)
             _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
             count += 1
             writer.add_summary(summary, count)

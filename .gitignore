@@ -4,11 +4,14 @@
 .DS_Store
 
 # Datasets
-data/4000unlabeledLP_same_dims_scaled
+data/4000*
 trained_models
 
 #logs
 deblurrer/cnn_autoencoder/logs
+deblurrer/cnn_autoencoder/output.txt
+logs/
+output.txt
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
