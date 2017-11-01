@@ -17,7 +17,7 @@ import blurrer.blurring_experiment as blurrer
 
 # Paths
 model_save_path = './trained_models/deblurring_model' # './trained_models/autoencoder_model'
-dataset_path = '../../data/4000unlabeledLP_same_dims_scaled'
+dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
 images_path = './results/'
 
 # Parameters
