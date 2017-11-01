@@ -27,7 +27,7 @@ logs_directory = './logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 25
+batch_size = 25 
 
 # Hyperparameters
 alpha = 0.01
