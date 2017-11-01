@@ -10,12 +10,7 @@ addons:
             - sshpass
 
 env:
-  global:
-    - PYTHONPATH=.
-    - secure: "bf+U/hrtfq8YLNIqbsCrEGEI0my7VDjoUBpcQy3DVlBG+PLGgBkVnoWM1m5zxawQln+323dGppHeAN/xPTORvuRJvkhCB9Dajq/sspBFNAi+VPC4TosQnjQorgHeQOulrhpIbAUXpSbZQkPPwVsYQAu3MP7MzBRMM+2lM7dG/1wVQH1lD/d0aqFFnLYS+r5EonuFUgy7F0RbmQ6kz/3r5RHpVSoZOADy8VGJmv2uPxbZAeexhsDN2Y5IzQUkak0+cEmG9pE7W6tFuKQ6cYWEr6FIIE5hetRDAf0yLyJ6aXnz5sAhFNJVhQHAuGjKw04GMUldp2VQweSDa+n3jktBc+W9y5Efq4tkdIPPJxzrfuLLNBeo+Uf+iOgTtZ7DSHHFbriVTzJIS3LI+ipVODOrW5MZ47u8xMQ7bIZ6blfVTyDBmMPGTQMTRlrE+y6DHm/YaxvWc9eSfApg999Oa+lga0xLrBSmyEL3mNgH2p2FmLfhX5ej21w87rsRvCYZOm8QeSSIFSEWutfFm0y4naQAPlBE4dCi0SZQfPXtdlHgb8RvtQMTD0SrNNZbjOgOeBVk6GFbyhUwOkQzQp+xvFgn8cU1vZTef0DMg1qoGt5Ha6wUtcm5PBmqSHFheMG7SttAhCVKHKeKFUAEEo3Yj99G5yxkixN9KHCl9yI4tI5pb8k="
-    - secure: "ensZrAldtQhMys1rTLfMgPcDZNMpTtDjiTzWDlq/gDm87kFljCynE2LHPW9ARjnt06P1Xo0lumt/PsOIrKoj71Tnr/S83s/Bt++cPG+cKLiTDQVKzmMuOJnF7SIIkZ/NKTbQkaPxXV41sLFqYTLjp01JVWdf48p5hTP9ga4mmUb7uadSXMwaCGptGuv+sJcCsPnO6K2oJ88Qie5u3NVUPCRNqaKtbUye4O6zpwk3zAAWm73C7LzdDrq/sYWQzmbKlBuuCHbzVRenU+FqaCCO1Cjd279zQlth7e6OW7838mUCZ0odRDX0gkC06OpPNx6+XUi3Y4+9P5WplxGoMuqwnWr37iBrSOOLC51Wt3jo1LAtK2pOMgRWouusnAtqCi17BIDnU0mNHGpncXO57GWlVYB3bg3dvZGHq8zh0BNAojE/FSXyZFfHd8Wwjnp9PNpXdLNKDhgouunq2wRn1b7wvFAbtBMcm3V1P0gyfoVulqDtt40uwO1+vHoUb8eE4vbGOaoPMLoTi374NlIl1vkygYsAqhmgjCUPuBV1aC2LihVo04qpSd5obywxKzhj6ZQugHr8qgx//caoX7lfuCYDJieiUtDTqdPxHSSi3z/lzWFvUKf4MX4OYeJYBT8+rgYDxMR1YgHk8Pb4U1TLkzx4KsZ57uA6Asw2nm/+sQ6RjnM="
-    - secure: "ERus2102FcLU+e3GzPTdqVm2jRmyW23619hEpVSHoKxMcC/YQV1c8W+qGDHZ2sJjAkWS6IRlXWEkt4wlKT6xHJoy3NaS+VQGjALsA+bKelY0/5rkoRreCIIeuWjwqA5KRCGZUAnXKj8RIbBVhWF+p4jKJhv7IDau0GZyg2IzSz3Ynk/B8SvG8FS1IoLghTWSiYI5OK9V4n0xTOyWmo5COZJwYgUtM6avM63BSXl1UesE7Sikgd9loWMCB2Q73MCcMOLD69k2eKSJU0VsxVKpbtSOYsKF9anc7dJPl0qVISj0osVbiWj69+INS9hOP8f9sHIRX9/GKneIWTqSD0mBnAiaFASLxzHPCw4Y4pIXWoOVoVaWLcstR9tlEMod11OjjSChKV2R4kQwpUCLquQm0Dt6JAcDjDkkrAmqg6d41uRfuWH9Zt9NVU/DU66FPnbkUOOtlkouBGMeOqVZcVUfkL7YQQYhIgnGburLiPc8iTcE45AYBLq0IRvEivYXMP1eyVJ7gIuiOaw0KmT6oWFwk9w7/Ze/xBvnxMVR6bk1zItABHEdmZ4fYWgcvUPA3bUXb0GjsDTX+oDIT9ajzYYyc8TjICkbJaQUCoKI9NUYvaHV1fX4s+4/qCp8IeaCssZ37fuR4Y6q1LmoOuAl+1Bnk9EfhWUH5g3d4xV/wRc9Jug="
-
+  - PYTHONPATH=.
 
 # Install dependencies.
 install:
@@ -37,5 +32,5 @@ after_success:
   # Upload to azure.
   - az login -u rf1515@ic.ac.uk -p cpOO9506
   - az vm start -g frobenius -n deblurrer
-  - az vm run-command invoke -g frobenius -n deblurrer --command-id RunShellScript --scripts "./deblurring/run.sh"
+  - sshpass -p cpOO9506Legan ssh zippo@$13.90.101.59 './deblurring/run.sh'
   - az vm stop -g frobenius -n deblurrer
