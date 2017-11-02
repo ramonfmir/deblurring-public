@@ -1,6 +1,6 @@
+from deblurrer.cnn_autoencoder.model_definitions import autoencoder_model as model
 from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 from tensorflow.python.framework import ops
-from model_definitions import autoencoder_model as model
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
