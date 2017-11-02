@@ -81,7 +81,7 @@ if __name__ == "__main__":
     median_b    = partial(median_blur, median_k)
     gaussian_b  = partial(gaussian_blur, gaussian_k, gaussian_s)
     bilateral_b = partial(bilateral_blur, bilateral_k, bilateral_c)
-    motion_b    = partial(motion_blur, motion_k, 'H')
+    motion_b    = partial(motion_blur, motion_k, 2, 'H')
 
     blurs = [averaging_b, median_b, gaussian_b, bilateral_b, motion_b]
 
@@ -90,5 +90,3 @@ if __name__ == "__main__":
     cv2.imshow('Blur', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-    
