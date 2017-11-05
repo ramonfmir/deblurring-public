@@ -63,24 +63,7 @@ class data_set(object):
             random.shuffle(self.imgs)
         return np.asarray(batch), np.asarray(self.blur_data_set(batch))
 
-
-    def motion_blur_kernel(self,lens,theta):
-        # https://sourceforge.net/p/octave/image/ci/default/tree/inst/fspecial.m#l379
-        if(lens < 1):
-            lens = 9
-        if (np.mod(lens, 2) == 1):
-            sze = [lens, lens]
-        else:
-            sze = [lens+1, lens+1]
-        ## First generate a horizontal line across the middle
-        f = np.zeros(sze)
-        f[int(np.floor(lens/2))][0:lens] = 1
-        # Then rotate to specified angle
-        f = sc.imrotate(f,theta)
-        f = f / np.sum(f);
-        return f
-
-    def blur_data_set(self, original_batch):
+    def blur_batch(self, original_batch):
         kernel = self.motion_blur_kernel(int(random.gauss(20, 0.5)),random.randint(1,359))
         corrupted = [sc.imrotate(cv2.filter2D(blurrer.pixellate_blur(img,6),-1,kernel),random.randint(-5,5)) for img in original_batch]
         return corrupted
