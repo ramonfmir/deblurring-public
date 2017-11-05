@@ -26,11 +26,7 @@ logs_directory = './tensorboard_logs/'
 # Parameters
 image_width = 270
 image_height = 90
-<<<<<<< HEAD:cnn_autoencoder/train.py
 batch_size = 25 
-=======
-batch_size = 200
->>>>>>> 47fdb036f8f3ab1b27d87eda526495861cff4d4b:deblurrer/cnn_autoencoder/train.py
 
 # Hyperparameters
 alpha = 0.001
