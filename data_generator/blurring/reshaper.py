@@ -39,11 +39,12 @@ def reduce_size(magnitude, img):
     scale = 0.5 + (magnitude / 2)
     height, width, _ = img.shape
     new_height, new_width = int(scale * height), int(scale * width)
-    v_border = int((height - new_height) / 2)
-    h_border = int((width - new_width) / 2)
+    v_border = (height - new_height) / 2
+    h_border = (width - new_width) / 2
 
     img = cv2.resize(img, (new_width, new_height))
-    new_img = cv2.copyMakeBorder(img, v_border, v_border, h_border, h_border,
+    new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
+                                      math.ceil(h_border), math.floor(h_border),
                                  cv2.BORDER_CONSTANT, value=[0, 0, 0])
 
     return new_img
