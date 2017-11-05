@@ -3,7 +3,7 @@ import sys
 import unittest
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
-modules = ("blurrer/", "deblurrer/")
+modules = ("blurrer/", " cnn_autoencoder/")
 
 def run_tests():
 	runner = unittest.TextTestRunner()
@@ -25,6 +25,6 @@ def run_tests():
 		print('All tests ran successfully.')
 		return 0
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
+    tf.test.main()
 	sys.exit(run_tests())
