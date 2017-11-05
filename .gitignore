@@ -1,18 +1,15 @@
-# Created by https://www.gitignore.io/api/python
+# Datasets
+data/4000unlabeledLP_same_dims_scaled
+
+# Trained models
+trained_models
+
+# Logs
+*logs
+output.txt
 
 # Mac OS
 .DS_Store
-
-# Datasets
-data/4000*
-data/100*
-trained_models
-
-#logs
-deblurrer/cnn_autoencoder/logs
-deblurrer/cnn_autoencoder/output.txt
-*logs/
-output.txt
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
