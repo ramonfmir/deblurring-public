@@ -35,7 +35,7 @@ def bilateral_blur(k_size, s_colour, img):
     # Default a larger kernel size value because of how the function works.
     # In the doc it is mentioned that k_size < 10 (which would be a typical
     # input) the function has no effect.
-    k_size = 75 if k_size < 75 else  k_size;
+    k_size = 75 if k_size < 75 else k_size;
     img = cv2.bilateralFilter(img, s_colour, k_size, k_size)
     return img
 
@@ -58,8 +58,6 @@ def apply_blurs_randomly(blurs, img):
     return img
 
 def motion_blur(size, theta, img):
-    size = size + 1 if size % 2 == 0 else size
-
     # First generate a horizontal line across the middle
     kernel = np.zeros([size, size])
     kernel[int(np.floor(size/2))][0:size] = 1
