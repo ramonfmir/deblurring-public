@@ -9,7 +9,7 @@ import scipy.misc as sc
 import random
 from skimage import color
 from functools import partial
-from blurrer import blurrer
+from data_generator.blurring import corrupter
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory
@@ -40,12 +40,6 @@ class data_set(object):
     def __init__(self, imgs):
         self.imgs = imgs
         self.train_set_pointer = 0
-        # kernel_size = 5
-        # bilateral_b = partial(blurrer.bilateral_blur, kernel_size,  10)
-        # motion_b_H    = partial(blurrer.motion_blur, 14, 'H', 2)
-        # motion_b_V    = partial(blurrer.motion_blur, 9, 'V', 2)
-        #
-        # self.blur_func_set = [motion_b_H,motion_b_V, bilateral_b]
 
     # next_batch retunr tuple of unblurred image and corrupted image with set
     # blurring parameters
@@ -61,9 +55,9 @@ class data_set(object):
         batch = self.imgs[batch_start_index:batch_end_index]
         if self.train_set_pointer == 0:
             random.shuffle(self.imgs)
-        return np.asarray(batch), np.asarray(self.blur_data_set(batch))
+        print(np.asarray(self.blur_batch(batch)).shape)
+        return np.asarray(batch), np.asarray(self.blur_batch(batch))
 
     def blur_batch(self, original_batch):
-        kernel = self.motion_blur_kernel(int(random.gauss(20, 0.5)),random.randint(1,359))
-        corrupted = [sc.imrotate(cv2.filter2D(blurrer.pixellate_blur(img,6),-1,kernel),random.randint(-5,5)) for img in original_batch]
+        corrupted = [corrupter.corrupt(img) for img in original_batch]
         return corrupted

@@ -5,7 +5,7 @@ data/4000unlabeledLP_same_dims_scaled
 trained_models
 
 # Logs
-logs
+*logs
 output.txt
 
 # Mac OS

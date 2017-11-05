@@ -1,18 +1,8 @@
-import blurrer as bl
-import reshaper as rs
+import data_generator.blurring.blurrer as bl
+import data_generator.blurring.reshaper as rs
 
 import cv2
 import random as rand
-
-gaussian_kernel_size = 0
-gaussian_sd = 0
-motion_blur_kernel_size = 0
-motion_blur_angle = 0
-pixelation_magnitude = 0
-
-perspective_pov = 0
-resize_factor = 0
-rotation_angle = 0
 
 def corrupt(img):
     gaussian_kernel_size = 3
