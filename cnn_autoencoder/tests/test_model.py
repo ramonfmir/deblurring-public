@@ -1,6 +1,10 @@
-from deblurrer.cnn_autoencoder.model_definitions import autoencoder_model as model
+import os
+import importlib
+import tensorflow as tf
 from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 from tensorflow.python.framework import ops
+
+from cnn_autoencoder.model_definitions import autoencoder_model as model
 
 # Flags
 FLAGS = tf.app.flags.FLAGS
@@ -25,7 +29,8 @@ batch_size = 40
 alpha = 0.005
 
 # Load the model
-model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/" + FLAGS.model_name + ".py"
+cnn_autonecoder_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model_file = cnn_autonecoder_path + "/model_definitions/" + FLAGS.model_name + ".py"
 spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
@@ -42,7 +47,7 @@ class test_network_cost(tf.test.TestCase):
 
             network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
 
-            # calculate the loss and optimize the network
+            # Calculate the loss and optimize the network
             self.assertEqual(network.original.shape, original.shape)
 
 if __name__ == '__main__':
