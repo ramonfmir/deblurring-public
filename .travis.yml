@@ -14,7 +14,7 @@ env:
   - secure: JQkzGclyp2CtVyC17rAS015rdkxXlS17yMm4TWxZOsmzfWdYm+LlxlMCcFZleELWuHb9kJsaxx8cJPtkRWKueU5nCZv+aMnDdvXANSi5VTVKLeRR2IKJRU/xc/q8acZQ/NrKh+cgpk0xRkm9hjRB+os+tyFfpQ3wcSsc78cfLRddYRlvpT4D8qhGfRq21TDeOxx01q8mvb/3Pjcx6dtUDBdK229SziMja1jHAgSKbSECHFsCw78BKf3wxPnR17TfG2BM0QIFvhFKifyt42rrFIsTFxjvDMGAtMKrIHeSW21pVzEqnh9On2idOK9MxwmZyGMI95iaq0fwc22ODK1yAsntPejo3t3z0AbsdeB9gD1ChJIDRTz0Q48GklKL0mdSm+1niqrNoxLaRvLAPeCcib97vlHsIxJIQCNGOPIuv98YQ1k/0mTymfUIhI6FcFPLC1dYA4CKYJ3WwSOAfGJNu8DD236nkeAnGFEln79crrIIbYr1b57j3Z6b/jonBKV9GvyuOczBNm6uCf/z/NvTRX8aOM/MIJC4fTm6FTr/xcgGnEMQ8dXkbPbk1MkgV77b5FJv4DcygIPVSFpmwFd/xjpKn+I4RRk6aPQJxH1zt6Th+hFtI8vbwlfN1T61E4SIL0C1Nc+nNLRgLPO8dCnRV39CoZws/v3Z9n6RTIz5AXQ=
   - secure: nEcmkRPl1unilFttoiujUxbEn/mVvghR0jZdqpybli5gBa00i+qFFYXGSpWN5TwNJjY9GSn7iUJAu9z1XiFrDKv1y2HFP7FGxFv3EZV65btqaiugBY9aBQfrHwGX4jniqrXcwq5W9m6DfuVn69VMKtYVuvCUlsTpQXTlaHkJ7ovF5yfcjd3QXgibRdt8AXUondXwhDRsXodvy7vjQIiQcvNz90VYDYCEl2wmXOc1VnDVGRCI70j9MfcVzcX8ZBgIV8LmgPdintVgsYLUbVtMajma5T0jHG5T1uAytOTMshTWGFFWlamz5MOYksO914hvHYjei4FG7k33NO0ydg1a7CxegUuMxJhR80Tg5BZFT3T5fnODlOFswU5xyX3YGK3NSKsBmvjofvZdVyTIQx0fhf34kwfgb8mLpyJr9zymdaB58U52bP2frmdxtVwXRZ5lhKCdgIGZojBtspf9l5nIMKtNBDnW2fX2bYkv0wYqYAHd8iAEsAQVooTUWkogf0MJUYu3UqGvZpKv72JvnjiP+J+qRFZisz1yzAaBGlkifrFnKT+OX9TmO7Iqxek3DAlD06P28gcvsO7Ku2UEgHE/GVHvy83q8cSEwRKyBGMTrSRbmrR4yf6AAPplH7Y6/xBvxi/OzzWriSdicBBsoQw943d1AzZBRqGyLGOC1dMd1ro=
 addons:
-  ssh_known_hosts: 40.121.49.164
+  ssh_known_hosts: $AZURE_HOST
 install:
 - sudo apt-get install sshpass
 - pip3 install --upgrade pip
@@ -25,10 +25,5 @@ script:
 - python3 -m coverage xml
 - for f in $(find . -name '*.py'); do pycodestyle --first $f; done
 after_success:
-- python3 -m codecov --token=a0ba70e0-9134-421f-b423-3aa504d98fa8
-- az login -u rf1515@ic.ac.uk -p cpOO9506
-- az vm start -g frobenius -n deblurrer
-- sleep 60
-- sshpass -p cpOO9506Legan ssh zippo@40.121.49.164 -o stricthostkeychecking=no 'bash
-  deblurring/run.sh'
-- az vm stop -g frobenius -n deblurrer
+- python3 -m codecov --token=$CODECOV_TOKEN
+- ./deploy.sh
