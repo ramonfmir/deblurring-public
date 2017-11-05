@@ -63,8 +63,7 @@ class data_set(object):
             random.shuffle(self.imgs)
         return np.asarray(batch), np.asarray(self.blur_data_set(batch))
 
-    """ create motion blur kernel. lens = strength of blur, theta = angle of blur
-    """
+
     def motion_blur_kernel(self,lens,theta):
         # https://sourceforge.net/p/octave/image/ci/default/tree/inst/fspecial.m#l379
         if(lens < 1):
