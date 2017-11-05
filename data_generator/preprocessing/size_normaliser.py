@@ -2,7 +2,7 @@ import glob, os
 from PIL import Image
 
 # Path to the original datasets
-dataset_directory_path = "deblurring/data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+dataset_directory_path = "../../data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 dataset_path = dataset_directory_path + "/4000unlabeledLP"
 print(dataset_directory_path, dataset_path)
 

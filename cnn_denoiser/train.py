@@ -19,7 +19,7 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
                             "The name of the model in the model_definitions module")
 
 # Paths
-model_save_path = 'deblurrer/cnn_autoencoder/trained_models_perm/deblurring_model'
+model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
 dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
 logs_directory = './tensorboard_logs/'
 
@@ -48,7 +48,7 @@ if (len(image_data.imgs) == 0):
 
 # Logging
 saver = tf.train.Saver()
-files = glob.glob('logs/*')
+files = glob.glob('tensorboard_logs/*')
 for f in files:
     os.remove(f)
 writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
