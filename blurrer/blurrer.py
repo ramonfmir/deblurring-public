@@ -38,15 +38,19 @@ def bilateral_blur(k_size, s_colour, img):
     return img
 
 # Motion Blur.
-def motion_blur(k_size, motion_direction, blur_magnitude, img):
+def motion_blur(k_size, motion_direction, img):
     kernel_motion_blur = np.zeros((k_size, k_size))
     if (motion_direction == 'H'):
         kernel_motion_blur[:, int((k_size - 1) / 2)] = np.ones(k_size)
-    elif (motion_direction == 'V'):
-        kernel_motion_blur[ int((k_size - 1) / 2),:] = np.ones(k_size)
-    kernel_motion_blur = kernel_motion_blur / k_size
+        kernel_motion_blur = kernel_motion_blur / k_size
     img = cv2.filter2D(img, -1, kernel_motion_blur)
     return img
+
+def pixellate_blur(im, magnitude):
+    height, width = im.shape[:2]
+    half_img =  cv2.resize(im, (int(width/magnitude), int(height/magnitude)))
+    quality_blur = cv2.resize(half_img, (width, height),interpolation = cv2.INTER_NEAREST)
+    return quality_blur
 
 def apply_blurs_randomly(blurs, img):
     rand_blurs = list(blurs)

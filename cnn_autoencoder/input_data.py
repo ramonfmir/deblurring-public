@@ -9,7 +9,7 @@ import scipy.misc as sc
 import random
 from skimage import color
 from functools import partial
-from blurrer import blurring_experiment as blurrer
+from blurrer import blurrer
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory
@@ -24,7 +24,7 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
-        image = cv2.resize(image, (image_size_x, image_size_y),0,0, cv2.INTER_LINEAR)
+        image = cv2.resize(image, (image_size_x, image_size_y),0,0, cv2.INTER_CUBIC)
         image = image.astype(np.float32)
         # Normalise colour
         image = np.multiply(image, 1.0 / 255.0)
@@ -40,12 +40,12 @@ class data_set(object):
     def __init__(self, imgs):
         self.imgs = imgs
         self.train_set_pointer = 0
-        kernel_size = 5
-        bilateral_b = partial(blurrer.bilateral_blur, kernel_size,  10)
-        motion_b_H    = partial(blurrer.motion_blur, 14, 'H', 2)
-        motion_b_V    = partial(blurrer.motion_blur, 9, 'V', 2)
-
-        self.blur_func_set = [motion_b_H,motion_b_V, bilateral_b]
+        # kernel_size = 5
+        # bilateral_b = partial(blurrer.bilateral_blur, kernel_size,  10)
+        # motion_b_H    = partial(blurrer.motion_blur, 14, 'H', 2)
+        # motion_b_V    = partial(blurrer.motion_blur, 9, 'V', 2)
+        #
+        # self.blur_func_set = [motion_b_H,motion_b_V, bilateral_b]
 
     # next_batch retunr tuple of unblurred image and corrupted image with set
     # blurring parameters
@@ -82,6 +82,6 @@ class data_set(object):
         return f
 
     def blur_data_set(self, original_batch):
-        kernel = self.motion_blur_kernel(int(random.gauss(23, 0.5)),random.randint(1,359))
-        corrupted = [cv2.filter2D(img,-1,kernel) for img in original_batch]
+        kernel = self.motion_blur_kernel(int(random.gauss(20, 0.5)),random.randint(1,359))
+        corrupted = [sc.imrotate(cv2.filter2D(blurrer.pixellate_blur(img,6),-1,kernel),random.randint(-5,5)) for img in original_batch]
         return corrupted

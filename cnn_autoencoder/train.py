@@ -7,7 +7,6 @@ import input_data
 import os
 import glob
 import importlib.util
-
 from model_definitions import autoencoder_model as model
 
 # Flags
@@ -20,20 +19,24 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
                             "The name of the model in the model_definitions module")
 
 # Paths
-model_save_path = './trained_models/deblurring_model'
+model_save_path = 'deblurrer/cnn_autoencoder/trained_models_perm/deblurring_model'
 dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
-logs_directory = './logs/'
+logs_directory = './tensorboard_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
+<<<<<<< HEAD:cnn_autoencoder/train.py
 batch_size = 25 
+=======
+batch_size = 200
+>>>>>>> 47fdb036f8f3ab1b27d87eda526495861cff4d4b:deblurrer/cnn_autoencoder/train.py
 
 # Hyperparameters
-alpha = 0.01
+alpha = 0.001
 
 # Load the model
-model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/" + FLAGS.model_name + ".py"
+model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/networks/" + FLAGS.model_name + ".py"
 spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
@@ -59,15 +62,17 @@ def train_model(sess, num_iter):
     output = open("output.txt", "w")
     count = 0
     for i in range(num_iter):
+        summary = None
         for batch_n in range(batch_per_ep):
-            input_,blurred = image_data.next_batch(batch_size)
+            input_, blurred = image_data.next_batch(batch_size)
             _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
-            count += 1
-            writer.add_summary(summary, count)
 
             epoch_cost = 'Epoch: {} - cost= {:.8f}'.format(i, cost)
             output.write(epoch_cost + '\n')
             print(epoch_cost)
+
+        count += 1
+        writer.add_summary(summary, count)
 
         saver.save(sess, model_save_path)
 
