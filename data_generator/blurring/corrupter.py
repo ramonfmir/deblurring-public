@@ -10,7 +10,7 @@ def corrupt(img, corruption_rate=0.1):
 
     # gaussian_kernel_size = 3
     # gaussian_sd = 2
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(5, 15))
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(7, 15))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
     perspective_pov = rand.uniform(0.2, 0.6) * rand.choice([1, -1])
@@ -32,7 +32,7 @@ def kernel_size_corrector(kernel_size):
     return kernel_size + 1 if kernel_size % 2 == 0 else kernel_size
 
 if __name__ == "__main__":
-    img = cv2.imread("../tests/license_plate2.jpg")
+    img = cv2.imread("../tests/lp.jpg")
 
     img = corrupt(img)
 
