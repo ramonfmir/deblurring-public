@@ -68,8 +68,8 @@ def train_model(sess, num_iter):
             output.write(epoch_cost + '\n')
             print(epoch_cost)
 
-            count += 1
-            writer.add_summary(summary, count)
+        count += 1
+        writer.add_summary(summary, count)
 
         saver.save(sess, model_save_path)
 
