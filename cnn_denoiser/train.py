@@ -69,7 +69,8 @@ def train_model(sess, num_iter):
             print(epoch_cost)
 
         count += 1
-        writer.add_summary(summary, count)
+        if count % 10 == 0:
+            writer.add_summary(summary, int(count / 10))
 
         saver.save(sess, model_save_path)
 
