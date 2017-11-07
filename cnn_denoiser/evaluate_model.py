@@ -1,9 +1,8 @@
 import tensorflow as tf
 import sys
-sys.path.insert(0, './model_definitions/')
 
 from model_definitions import autoencoder_model as model
-from model_definitions import tutorial_cnn as autoencoder_network
+from model_definitions.networks import tutorial_cnn as autoencoder_network
 
 import input_data
 import numpy as np
@@ -11,25 +10,27 @@ import matplotlib.pyplot as plt
 from skimage import color
 import scipy.misc
 import glob
-sys.path.insert(0, "../..")
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
+dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
 dataset_path = 'data/100labeledLPforvalidation_same_dims_scaled'
-images_path = 'cnn_denoiser/results/'
+images_path = 'cnn_denoiser/results_4000/'
+logs_directory = './evaluate_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 10
+batch_size = 1
+num_iter = 10
+
 
 # Method to show results visually
-def show_encoding(sess, original, network):
-    recon_img = sess.run([network.deblurred], feed_dict={network.corrupted: original})[0]
+def show_encoding(sess, writer, original, corrupted, network):
+    summary_orig = sess.run(network.summary_op, feed_dict={network.corrupted: original, network.original: original})
+    summary_corr = sess.run(network.summary_op, feed_dict={network.corrupted: corrupted, network.original: original})
 
-    for i in range(len(original)):
-        scipy.misc.imsave(images_path + str(i) + '/deblurred.jpg', recon_img[i, ..., 0])
-        scipy.misc.imsave(images_path + str(i) + '/original.jpg', original[i])
+    writer.add_summary(summary_orig, i)
 
 # Evaluate model
 with tf.Session() as sess:
@@ -41,7 +42,10 @@ with tf.Session() as sess:
 
     # Load MNIST data
     image_data = input_data.load_images(dataset_path, image_width,image_height)
-    test_ori_images, test_corr_images = image_data.next_batch(batch_size)
 
     # Test images used for examples in README
-    show_encoding(sess, test_ori_images, network)
+    writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
+
+    for i in range(num_iter):
+        test_ori_images, test_corr_images = image_data.next_batch(batch_size)
+        show_encoding(sess, writer, test_ori_images, test_corr_images, network)

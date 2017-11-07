@@ -20,13 +20,13 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
+dataset_path = 'data/40nice'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 200
+batch_size = 10
 
 # Hyperparameters
 alpha = 0.001
@@ -57,6 +57,7 @@ writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 def train_model(sess, num_iter):
     output = open("output.txt", "w")
     count = 0
+    print('Training model...')
     for i in range(num_iter):
         summary = None
         for batch_n in range(batch_per_ep):
@@ -67,8 +68,8 @@ def train_model(sess, num_iter):
             output.write(epoch_cost + '\n')
             print(epoch_cost)
 
-        count += 1
-        writer.add_summary(summary, count)
+            count += 1
+            writer.add_summary(summary, count)
 
         saver.save(sess, model_save_path)
 
