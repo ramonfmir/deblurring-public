@@ -26,7 +26,7 @@ logs_directory = './tensorboard_logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 200
+batch_size = 400
 
 # Hyperparameters
 alpha = 0.001
@@ -76,7 +76,8 @@ def train_model(sess, num_iter):
 
 # Run continue training / restart training
 def main(argv=None):
-    with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+    #config=tf.ConfigProto(log_device_placement=True)
+    with tf.Session() as sess:
         if FLAGS.run == 'continue':
             saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':
