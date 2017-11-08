@@ -6,7 +6,7 @@ data/100labeledLPforvalidation_same_dims_scaled/
 trained_models
 
 # Logs
-*logs
+*logs*
 output.txt
 results
 
