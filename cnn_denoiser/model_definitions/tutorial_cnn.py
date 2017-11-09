@@ -4,8 +4,8 @@ import tensorflow as tf
 # Parameters
 channels = 1
 
-def autoencoder(inputs, reuse):
-	with tf.variable_scope('ConvNet', reuse=reuse):
+def autoencoder(inputs, gpu):
+	with tf.variable_scope('VarScope_%d' % gpu):
 	    # Encoder (convolutions)
 	    net = lays.conv2d(inputs, 128, [5, 5], stride=3, padding='SAME')
 	    net = lays.conv2d(net, 64, [5, 5], stride=2, padding='SAME')

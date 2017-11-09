@@ -61,7 +61,8 @@ def train_model(sess, num_iter):
         summary = None
         for batch_n in range(batch_per_ep):
             input_, blurred = image_data.next_batch(batch_size)
-            _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], feed_dict={network.original: input_, network.corrupted: blurred})
+            _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], 
+                                        feed_dict={network.original: input_, network.corrupted: blurred})
 
             epoch_cost = 'Epoch: {} - cost= {:.8f}'.format(i, cost)
             output.write(epoch_cost + '\n')
@@ -77,7 +78,7 @@ def train_model(sess, num_iter):
 # Run continue training / restart training
 def main(argv=None):
     #config=tf.ConfigProto(log_device_placement=True)
-    with tf.Session() as sess:
+    with tf.Session() as sess, tf.device('/cpu:0'):
         if FLAGS.run == 'continue':
             saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':
