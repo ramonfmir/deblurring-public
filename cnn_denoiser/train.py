@@ -71,8 +71,7 @@ def train_model(sess, num_iter):
         count += 1
         if count % 10 == 0:
             writer.add_summary(summary, int(count / 10))
-
-        saver.save(sess, model_save_path)
+            saver.save(sess, model_save_path)
 
     output.close()
 
