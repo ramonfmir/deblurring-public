@@ -3,7 +3,7 @@ from PIL import Image
 
 # Path to the original datasets
 dataset_directory_path = "../../data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-dataset_path = dataset_directory_path + "/100labeledLPforvalidation"
+dataset_path = dataset_directory_path + "/40nice"
 # dataset_path = dataset_directory_path + "/4000unlabeledLP"
 print(dataset_directory_path, dataset_path)
 

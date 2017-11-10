@@ -26,7 +26,7 @@ logs_directory = './tensorboard_logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 20
+batch_size = 30
 
 # Hyperparameters
 alpha = 0.001
