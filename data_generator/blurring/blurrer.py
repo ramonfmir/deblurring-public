@@ -50,6 +50,19 @@ def pixelate_blur(magnitude, img):
                              interpolation = cv2.INTER_NEAREST)
     return pixeled_img
 
+def rnd_remove_pixel(img, p):
+    img = np.asarray(img)
+    print(img.shape)
+    # random boolean mask for which values will be changed
+    mask_size = np.array([img.shape[0], img.shape[1]])
+    mask = np.random.randint(0,2,size=mask_size).astype(np.bool)
+
+    # random matrix the same shape of your data
+    r = np.random.rand(*img.shape)*np.max([0])
+    img[mask] = r[mask]
+    #print(img)
+    return img
+
 def apply_blurs_randomly(blurs, img):
     rand_blurs = list(blurs)
     rand.shuffle(rand_blurs)
@@ -58,20 +71,29 @@ def apply_blurs_randomly(blurs, img):
     return img
 
 def motion_blur(size, theta, img):
-    # First generate a horizontal line across the middle
+    #First generate a horizontal line across the middle
     kernel = np.zeros([size, size])
-    kernel[int(np.floor(size/2))][0:size] = 1
-
+    # find point spread function depth
+    size = float(size)
+    depth = size/8
+    kernel[int(np.floor(size/2 - depth)):int(np.floor(size/2 + depth))+1][0:int(size)] = 1
     # Then rotate to specified angle
     kernel = sc.imrotate(kernel,theta)
-    kernel = kernel / np.sum(kernel);
-
+    kernel = kernel / np.sum(kernel)
     img =  cv2.filter2D(img, -1, kernel)
     return img
 
+def point_spread_matrix(size, r,f):
+    # non linear point spread function
+    kernel = np.zeros([size, size])
+    for i in range(size):
+        y = int((r*np.sin(f*i)+r*np.cos(i*f)))
+        kernel[y][i] = 1
+    return kernel
+
 if __name__ == "__main__":
-    img = cv2.imread('tests/license_plate.jpg')
-    img = motion_blur(9, 45, img)
+    img = cv2.imread('license_plate.jpg')
+    img = rnd_remove_pixel(img,0.1)
     cv2.imshow('name', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
