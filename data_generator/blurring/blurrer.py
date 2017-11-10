@@ -45,6 +45,7 @@ def pixelate_blur(magnitude, img):
     new_height = int(height/magnitude)
     new_width  = int(width/magnitude)
     new_img = cv2.resize(img, (new_width, new_height))
+    new_img = rnd_remove_pixel(new_img,0.1)
 
     pixeled_img = cv2.resize(new_img, (width, height),
                              interpolation = cv2.INTER_NEAREST)
@@ -52,15 +53,13 @@ def pixelate_blur(magnitude, img):
 
 def rnd_remove_pixel(img, p):
     img = np.asarray(img)
-    print(img.shape)
     # random boolean mask for which values will be changed
     mask_size = np.array([img.shape[0], img.shape[1]])
     mask = np.random.randint(0,2,size=mask_size).astype(np.bool)
 
-    # random matrix the same shape of your data
-    r = np.random.rand(*img.shape)*np.max([0])
+    # img after guassain blur, the same shape of your data
+    r = gaussian_blur(5,3,img)
     img[mask] = r[mask]
-    #print(img)
     return img
 
 def apply_blurs_randomly(blurs, img):
