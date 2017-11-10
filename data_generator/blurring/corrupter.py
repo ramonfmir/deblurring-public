@@ -18,13 +18,12 @@ def corrupt(img, corruption_rate=0.1):
     # rotation_angle = rand.uniform(-5.0, 5.0)
 
     # img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
-    # img = bl.pixelate_blur(pixelation_magnitude, img)
+    img = bl.pixelate_blur(pixelation_magnitude, img)
     img = rs.apply_perspective(perspective_pov, img) # done
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
     # img = rs.reduce_size(resize_factor, img)
     # img = rs.rotate_image(rotation_angle, img)
-    img = bl.pixelate_blur(pixelation_magnitude, img)
-
+    # img = bl.pixelate_blur(pixelation_magnitude, img)
     return img
 
 def kernel_size_corrector(kernel_size):
