@@ -10,10 +10,10 @@ def corrupt(img, corruption_rate=0.1):
 
     # gaussian_kernel_size = 3
     # gaussian_sd = 2
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(7, 15))
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(10, 20))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
-    perspective_pov = rand.uniform(0.2, 0.6) * rand.choice([1, -1])
+    perspective_pov = rand.uniform(-0.3, 0.3)
     # resize_factor = rand.uniform(0.75, 0.75)
     # rotation_angle = rand.uniform(-5.0, 5.0)
 
