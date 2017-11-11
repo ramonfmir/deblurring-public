@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from .model import Model
 
-def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01):
+def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01, global_step):
     # original, unblurred image to the network
     original = tf.placeholder(tf.float32, (batch_size, image_height, image_width, 3))
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
@@ -17,7 +17,7 @@ def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01):
 
     # calculate the loss and optimize the network
     cost = tf.reduce_mean(tf.square(deblurred - original_greyscale))  # claculate the mean square error loss
-    train_op = tf.train.AdamOptimizer(learning_rate=lr).minimize(cost)
+    train_op = tf.train.AdamOptimizer(learning_rate=lr).minimize(cost, global_step=global_step)
     # initialize the network
     init = tf.global_variables_initializer()
 

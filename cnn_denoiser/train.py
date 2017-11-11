@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy
 import cv2
 import input_data
@@ -29,7 +28,13 @@ image_height = 90
 batch_size = 30
 
 # Hyperparameters
-alpha = 0.001
+# alpha = 0.0001
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 1e-3
+N_steps_before_decay = 50
+decay_rate = 0.9
+alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                           N_steps_before_decay, decay_rate, staircase=True)
 
 # Load the model
 model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/networks/" + FLAGS.model_name + ".py"
@@ -37,7 +42,7 @@ spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
