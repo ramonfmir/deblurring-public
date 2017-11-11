@@ -16,6 +16,7 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     lay1 = tf.layers.conv2d(pre_lay1, 32, [3, 3], strides=(1, 1), padding='SAME')
     lay1 = tf.nn.lrn(lay1)
     k1 = tf.Variable(inits)
+    tf.summary.scalar('k1', k1)
     lay1_ = k1 * lay1 + (1-k1) * pre_lay1
     summary_layer(lay1, 'conv1')
     summary_layer(lay1_, 'conv1_')
@@ -24,6 +25,7 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     lay2 = tf.layers.conv2d(lay1_, 32, [5, 5], strides=(1, 1), padding='SAME')
     lay2 = tf.nn.lrn(lay2)
     k2 = tf.Variable(inits)
+    tf.summary.scalar('k2', k2)
     lay2_ = k2 * lay2 + (1-k2)*lay1_
     summary_layer(lay2, 'conv2')
     summary_layer(lay2_, 'conv2_')
@@ -32,6 +34,7 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     lay3 = tf.layers.conv2d(lay2_, 32, [3, 3], strides=(1, 1), padding='SAME')
     lay3 = tf.nn.lrn(lay3)
     k3 = tf.Variable(inits)
+    tf.summary.scalar('k3', k3)
     lay3_ = k3 * lay3 + (1-k3)*lay2_
     summary_layer(lay3, 'conv3')
     summary_layer(lay3_, 'conv3_')
@@ -40,6 +43,7 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     lay4 = tf.layers.conv2d(lay3_, 32, [3, 3], strides=(1, 1), padding='SAME')
     lay4 = tf.nn.lrn(lay4)
     k4 = tf.Variable(inits)
+    tf.summary.scalar('k4', k4)
     lay4_ = k4 * lay4 + (1-k4)*lay3_
     summary_layer(lay3, 'conv4')
     summary_layer(lay3_, 'conv4_')
@@ -68,5 +72,5 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     #summary_layer(net, 'outlier_rej')
 
     # Final tanh activation
-    net = tf.nn.tanh(net)
+    # net = tf.nn.tanh(net)
     return net
