@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from .model import Model
 
-gpus = 4
+gpus = 1
 
 def combine_gradients(tower_grads):
     average_grads = []

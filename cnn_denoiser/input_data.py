@@ -24,7 +24,7 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
-        image = cv2.resize(image, (image_size_x, image_size_y),0,0, cv2.INTER_CUBIC)
+        image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
         image = image.astype(np.float32)
         # Normalise colour
         image = np.multiply(image, 1.0 / 255.0)
@@ -53,10 +53,19 @@ class data_set(object):
         else:
             self.train_set_pointer = batch_end_index
         batch = self.imgs[batch_start_index:batch_end_index]
+        
         if self.train_set_pointer == 0:
             random.shuffle(self.imgs)
-        return np.asarray(batch), np.asarray(self.blur_batch(batch))
 
-    def blur_batch(self, original_batch):
-        corrupted = [corrupter.corrupt(img) for img in original_batch]
-        return corrupted
+        return self.training_batch(batch)#np.asarray(batch), np.asarray(self.blur_batch(batch))
+
+    def training_batch(self, original_batch):
+        goal_batch = []
+        corrupted_batch = []
+        for img in original_batch:
+            goal, corrupted = corrupter.corrupt(img)
+            goal_batch.append(goal)
+            corrupted_batch.append(corrupted)
+
+        return goal_batch, corrupted_batch
+

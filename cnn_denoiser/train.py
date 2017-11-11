@@ -20,13 +20,13 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
+dataset_path = 'data/4000unlabeledLP'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 400
+batch_size = 200
 
 # Hyperparameters
 alpha = 0.001
@@ -57,6 +57,7 @@ writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 def train_model(sess, num_iter):
     output = open("output.txt", "w")
     count = 0
+    print('Training model...')
     for i in range(num_iter):
         summary = None
         for batch_n in range(batch_per_ep):
@@ -69,8 +70,7 @@ def train_model(sess, num_iter):
             print(epoch_cost)
 
         count += 1
-        writer.add_summary(summary, count)
-
+        writer.add_summary(summary, int(count))
         saver.save(sess, model_save_path)
 
     output.close()
@@ -78,7 +78,7 @@ def train_model(sess, num_iter):
 # Run continue training / restart training
 def main(argv=None):
     #config=tf.ConfigProto(log_device_placement=True)
-    with tf.Session() as sess, tf.device('/cpu:0'):
+    with tf.Session(config= tf.ConfigProto(allow_soft_placement = True)) as sess, tf.device('/cpu:0'):
         if FLAGS.run == 'continue':
             saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':
