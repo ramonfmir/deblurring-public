@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from .model import Model
 
-def initialise(image_width, image_height, autoencoder, batch_size, lr=0.01, global_step):
+def initialise(image_width, image_height, autoencoder, batch_size, lr, global_step):
     # original, unblurred image to the network
     original = tf.placeholder(tf.float32, (batch_size, image_height, image_width, 3))
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
