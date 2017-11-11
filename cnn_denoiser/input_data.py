@@ -10,6 +10,7 @@ import random
 from skimage import color
 from functools import partial
 from data_generator.blurring import corrupter
+from data_generator.blurring import contrast
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory
@@ -24,6 +25,7 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
+        image = contrast.increase_contrast(image)
         image = cv2.resize(image, (image_size_x, image_size_y),0,0, cv2.INTER_CUBIC)
         image = image.astype(np.float32)
         # Normalise colour

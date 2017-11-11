@@ -3,7 +3,8 @@ from PIL import Image
 
 # Path to the original datasets
 dataset_directory_path = "../../data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-dataset_path = dataset_directory_path + "/4000unlabeledLP"
+dataset_path = dataset_directory_path + "/40nice"
+# dataset_path = dataset_directory_path + "/4000unlabeledLP"
 print(dataset_directory_path, dataset_path)
 
 dataset_img_ext = "jpg"
@@ -37,7 +38,7 @@ def pad_with_black_and_scale(im):
     return new_im
 
 if __name__ == "__main__":
-    new_path = dataset_directory_path + "/4000unlabeledLP_same_dims_scaled/"
+    new_path = dataset_path + "_same_dims_scaled/"
     print(new_path)
     if not os.path.exists(new_path):
         os.makedirs(new_path)

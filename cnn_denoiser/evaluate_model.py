@@ -13,7 +13,7 @@ import glob
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
+# dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
 dataset_path = 'data/100labeledLPforvalidation_same_dims_scaled'
 images_path = 'cnn_denoiser/results_4000/'
 logs_directory = './evaluate_logs/'
@@ -30,7 +30,7 @@ def show_encoding(sess, writer, original, corrupted, network):
     summary_orig = sess.run(network.summary_op, feed_dict={network.corrupted: original, network.original: original})
     summary_corr = sess.run(network.summary_op, feed_dict={network.corrupted: corrupted, network.original: original})
 
-    writer.add_summary(summary_orig, i)
+    writer.add_summary(summary_corr, i)
 
 # Evaluate model
 with tf.Session() as sess:
