@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy
 import cv2
 import input_data
@@ -26,10 +25,18 @@ logs_directory = './tensorboard_logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 200
+batch_size = 100
 
 # Hyperparameters
-alpha = 0.001
+# alpha = 0.0001
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 1e-2
+N_steps_before_decay = 20
+decay_rate = 0.9
+alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                   N_steps_before_decay, decay_rate, staircase=True)
+
+tf.summary.scalar('learning_rate', alpha)
 
 # Load the model
 model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/networks/" + FLAGS.model_name + ".py"
@@ -37,7 +44,7 @@ spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
@@ -62,7 +69,7 @@ def train_model(sess, num_iter):
         summary = None
         for batch_n in range(batch_per_ep):
             input_, blurred = image_data.next_batch(batch_size)
-            _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op], 
+            _, cost, summary = sess.run([network.train_op, network.cost, network.summary_op],
                                         feed_dict={network.original: input_, network.corrupted: blurred})
 
             epoch_cost = 'Epoch: {} - cost= {:.8f}'.format(i, cost)

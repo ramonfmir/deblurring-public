@@ -10,6 +10,7 @@ import random
 from skimage import color
 from functools import partial
 from data_generator.blurring import corrupter
+from data_generator.blurring import contrast
 
 # loads the image from file into array
 # The unziped files of images must exits in the relative directory
@@ -24,7 +25,9 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
+
         image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
+
         image = image.astype(np.float32)
         # Normalise colour
         image = np.multiply(image, 1.0 / 255.0)
@@ -53,7 +56,7 @@ class data_set(object):
         else:
             self.train_set_pointer = batch_end_index
         batch = self.imgs[batch_start_index:batch_end_index]
-        
+
         if self.train_set_pointer == 0:
             random.shuffle(self.imgs)
 
@@ -68,4 +71,3 @@ class data_set(object):
             corrupted_batch.append(corrupted)
 
         return goal_batch, corrupted_batch
-
