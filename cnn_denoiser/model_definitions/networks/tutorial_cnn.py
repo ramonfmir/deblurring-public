@@ -13,7 +13,7 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     # Encoder
     pre_lay1 = tf.layers.conv2d(inputs, 32, [3, 3], strides=(1, 1), padding='SAME')
 
-    lay1 = tf.layers.conv2d(lay1, 32, [3, 3], strides=(1, 1), padding='SAME')
+    lay1 = tf.layers.conv2d(pre_lay1, 32, [3, 3], strides=(1, 1), padding='SAME')
     k1 = tf.Variable(inits)
     lay1_ = k1 * lay1 + pre_lay1
     summary_layer(lay1, 'conv1')
