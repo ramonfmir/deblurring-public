@@ -37,11 +37,11 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     lay4 = tf.layers.conv2d(lay3_, 32, [3, 3], strides=(1, 1), padding='SAME')
     k4 = tf.Variable(inits)
     lay4_ = k4 * lay4 + lay3_
-    summary_layer(lay3, 'conv3')
-    summary_layer(lay3_, 'conv3_')
+    summary_layer(lay3, 'conv4')
+    summary_layer(lay3_, 'conv4_')
 
     # net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d(net, 1, [3, 3], strides=(1, 1), padding='SAME')
+    net = tf.layers.conv2d(lay4_, 1, [3, 3], strides=(1, 1), padding='SAME')
     summary_layer(net, 'conv5')
 
 
