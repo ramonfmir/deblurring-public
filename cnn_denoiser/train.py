@@ -30,9 +30,9 @@ batch_size = 30
 # Hyperparameters
 # alpha = 0.0001
 global_step = tf.Variable(0, trainable=False)
-starter_learning_rate = 1e-2
-N_steps_before_decay = 50
-decay_rate = 0.95
+starter_learning_rate = 1e-1
+N_steps_before_decay = 20
+decay_rate = 0.9
 alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            N_steps_before_decay, decay_rate, staircase=True)
 
