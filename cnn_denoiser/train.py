@@ -36,6 +36,8 @@ decay_rate = 0.9
 alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            N_steps_before_decay, decay_rate, staircase=True)
 
+tf.summary.scalar('learning_rate', alpha)
+
 # Load the model
 model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/networks/" + FLAGS.model_name + ".py"
 spec = importlib.util.spec_from_file_location("model_definitions", model_file)

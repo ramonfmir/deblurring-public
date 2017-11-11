@@ -13,16 +13,16 @@ def autoencoder(inputs, batch_size, dropout=0.5):
     net = tf.layers.conv2d(inputs, 128, [4, 4], strides=(3, 3), padding='SAME')
     summary_layer(net, 'conv1')
 
-    tf.layers.dropout(net, dropout)
+    net = tf.layers.dropout(net, dropout)
     net = tf.layers.conv2d(net, 64, [3, 3], strides=(2, 2), padding='SAME')
     summary_layer(net, 'conv2')
 
     # Decoder
-    tf.layers.dropout(net, dropout)
+    net = tf.layers.dropout(net, dropout)
     net = tf.layers.conv2d_transpose(net, 64, [3, 3], strides=(2, 2), padding='SAME')
     summary_layer(net, 'deconv1')
 
-    tf.layers.dropout(net, dropout)
+    net = tf.layers.dropout(net, dropout)
     net = tf.layers.conv2d_transpose(net, channels, [4, 4], strides=(3, 3), padding='SAME')
     summary_layer(net, 'deconv2')
 
