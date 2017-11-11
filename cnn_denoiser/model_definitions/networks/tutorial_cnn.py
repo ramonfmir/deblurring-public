@@ -9,23 +9,38 @@ def summary_layer(net, name):
 
 
 def autoencoder(inputs, batch_size, dropout=0.65):
+    inits = tf.constant(0.1)
     # Encoder
-    net = tf.layers.conv2d(inputs, 32, [4, 4], strides=(1, 1), padding='SAME')
-    summary_layer(net, 'conv1')
+    pre_lay1 = tf.layers.conv2d(inputs, 32, [3, 3], strides=(1, 1), padding='SAME')
 
-    net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d(net, 64, [5, 5], strides=(1, 1), padding='SAME')
-    summary_layer(net, 'conv2')
+    lay1 = tf.layers.conv2d(lay1, 32, [3, 3], strides=(1, 1), padding='SAME')
+    k1 = tf.Variable(inits)
+    lay1_ = k1 * lay1 + pre_lay1
+    summary_layer(lay1, 'conv1')
+    summary_layer(lay1_, 'conv1_')
 
-    net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d(net, 64, [3, 3], strides=(1, 1), padding='SAME')
-    summary_layer(net, 'conv3')
+    # net = tf.layers.dropout(net, dropout)
+    lay2 = tf.layers.conv2d(lay1_, 32, [5, 5], strides=(1, 1), padding='SAME')
+    k2 = tf.Variable(inits)
+    lay2_ = k2 * lay2 + lay1_
+    summary_layer(lay2, 'conv2')
+    summary_layer(lay2_, 'conv2_')
 
-    net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d(net, 64, [3, 3], strides=(1, 1), padding='SAME')
-    summary_layer(net, 'conv4')
+    # net = tf.layers.dropout(net, dropout)
+    lay3 = tf.layers.conv2d(lay2_, 32, [3, 3], strides=(1, 1), padding='SAME')
+    k3 = tf.Variable(inits)
+    lay3_ = k3 * lay3 + lay2_
+    summary_layer(lay3, 'conv3')
+    summary_layer(lay3_, 'conv3_')
 
-    net = tf.layers.dropout(net, dropout)
+    # net = tf.layers.dropout(net, dropout)
+    lay4 = tf.layers.conv2d(lay3_, 32, [3, 3], strides=(1, 1), padding='SAME')
+    k4 = tf.Variable(inits)
+    lay4_ = k4 * lay4 + lay3_
+    summary_layer(lay3, 'conv3')
+    summary_layer(lay3_, 'conv3_')
+
+    # net = tf.layers.dropout(net, dropout)
     net = tf.layers.conv2d(net, 1, [3, 3], strides=(1, 1), padding='SAME')
     summary_layer(net, 'conv5')
 
