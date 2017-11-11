@@ -6,15 +6,14 @@ import numpy as np
 import random as rand
 from copy import deepcopy
 
-<<<<<<< HEAD
-def corrupt(img, corruption_rate=0.1):
+def corrupt(img):
     gaussian_kernel_size = kernel_size_corrector(rand.randint(5, 9))
     gaussian_sd = rand.randint(3, 7)
     motion_blur_kernel_size = kernel_size_corrector(rand.randint(11, 21))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
     perspective_pov = rand.uniform(-0.5, 0.5)
-    resize_factor = rand.uniform(0.2, 1.00)    
+    resize_factor = rand.uniform(0.2, 1.00)
     # rotation_angle = rand.uniform(-5.0, 5.0)
 
     # Just rotate the original.
@@ -43,29 +42,6 @@ def nice_goal_image(img):
     res2 = res.reshape((img.shape))
 
     return res2
-=======
-def corrupt(img, corruption_rate=0.05):
-    if rand.uniform(0, 1) < corruption_rate:
-        return img
-
-    # gaussian_kernel_size = 3
-    # gaussian_sd = 2
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(10, 20))
-    motion_blur_angle = rand.uniform(0, 360)
-    pixelation_magnitude = rand.randint(2, 4)
-    # perspective_pov = rand.uniform(-0.3, 0.3)
-    # resize_factor = rand.uniform(0.75, 0.75)
-    # rotation_angle = rand.uniform(-5.0, 5.0)
-
-    # img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
-    # img = bl.pixelate_blur(pixelation_magnitude, img)
-    # img = rs.apply_perspective(perspective_pov, img) # done
-    img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
-    # img = rs.reduce_size(resize_factor, img)
-    # img = rs.rotate_image(rotation_angle, img)
-    # img = bl.pixelate_blur(pixelation_magnitude, img)
-    return img
->>>>>>> 571816da0bbcb5b7bcc62939e94eaead0a365814
 
 def kernel_size_corrector(kernel_size):
     kernel_size = int(kernel_size)
