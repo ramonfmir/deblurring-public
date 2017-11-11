@@ -10,12 +10,16 @@ def summary_layer(net, name):
 
 def autoencoder(inputs, batch_size, dropout=0.5):
     # Encoder
-    net = tf.layers.conv2d(inputs, 128, [4, 4], strides=(3, 3), padding='SAME')
+    net = tf.layers.conv2d(inputs, 32, [4, 4], strides=(1, 1), padding='SAME')
     summary_layer(net, 'conv1')
 
     net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d(net, 64, [3, 3], strides=(2, 2), padding='SAME')
+    net = tf.layers.conv2d(net, 64, [3, 3], strides=(3, 3), padding='SAME')
     summary_layer(net, 'conv2')
+
+    net = tf.layers.dropout(net, dropout)
+    net = tf.layers.conv2d(net, 64, [3, 3], strides=(2, 2), padding='SAME')
+    summary_layer(net, 'conv3')
 
     # Decoder
     net = tf.layers.dropout(net, dropout)
