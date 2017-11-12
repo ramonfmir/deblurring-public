@@ -25,12 +25,10 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
-        image = contrast.increase_contrast(image)
-        image = cv2.resize(image, (image_size_x, image_size_y),0,0, cv2.INTER_CUBIC)
-        image = image.astype(np.float32)
-        # Normalise colour
-        image = np.multiply(image, 1.0 / 255.0)
+        image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
+
         images.append(image)
+
         flbase = os.path.basename(fl)
         img_names.append(flbase)
     random.shuffle(images)
@@ -57,7 +55,17 @@ class data_set(object):
         batch = self.imgs[batch_start_index:batch_end_index]
         if self.train_set_pointer == 0:
             random.shuffle(self.imgs)
-        return np.asarray(batch), np.asarray(self.blur_batch(batch))
+
+        # Apply blur to batch originals
+        blurred = self.blur_batch(batch)
+
+        # Normalise colour
+        blurred = self.normalise_batch(blurred)
+        original = self.normalise_batch(batch)
+        return original, blurred
+
+    def normalise_batch(self, batch):
+        return [np.asarray(np.multiply(image.astype(np.float32), 1.0 / 255.0)) for image in batch]
 
     def blur_batch(self, original_batch):
         corrupted = [corrupter.corrupt(img) for img in original_batch]
