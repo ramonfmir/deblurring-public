@@ -1,8 +1,8 @@
 import cv2
 import numpy as numpy
 
-def increase_contrast(img):
-    clahe = cv2.createCLAHE(clipLimit=3., tileGridSize=(8,8))
+def increase_contrast(img, level=18):
+    clahe = cv2.createCLAHE(clipLimit=3., tileGridSize=(level,level))
 
     lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)  # convert from BGR to LAB color space
     l, a, b = cv2.split(lab)  # split on 3 different channels

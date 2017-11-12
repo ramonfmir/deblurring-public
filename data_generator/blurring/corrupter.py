@@ -1,5 +1,6 @@
 import data_generator.blurring.blurrer as bl
 import data_generator.blurring.reshaper as rs
+import data_generator.blurring.contrast as ct
 
 import cv2
 import random as rand
@@ -10,9 +11,10 @@ def corrupt(img, corruption_rate=0.05):
 
     # gaussian_kernel_size = 3
     # gaussian_sd = 2
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(10, 20))
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(7, 17))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
+    contrast_level = rand.randint(10, 20)
     # perspective_pov = rand.uniform(-0.3, 0.3)
     # resize_factor = rand.uniform(0.75, 0.75)
     # rotation_angle = rand.uniform(-5.0, 5.0)
@@ -21,6 +23,7 @@ def corrupt(img, corruption_rate=0.05):
     # img = bl.pixelate_blur(pixelation_magnitude, img)
     # img = rs.apply_perspective(perspective_pov, img) # done
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+    img = ct.increase_contrast(img, contrast_level)
     # img = rs.reduce_size(resize_factor, img)
     # img = rs.rotate_image(rotation_angle, img)
     # img = bl.pixelate_blur(pixelation_magnitude, img)
