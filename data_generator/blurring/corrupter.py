@@ -1,5 +1,7 @@
 import data_generator.blurring.blurrer as bl
 import data_generator.blurring.reshaper as rs
+import data_generator.blurring.contrast as ct
+import input_data
 
 import cv2
 import numpy as np
@@ -50,9 +52,10 @@ def corrupt(img, corruption_rate=0.05):
 
     # gaussian_kernel_size = 3
     # gaussian_sd = 2
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(10, 20))
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(13, 19))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
+    contrast_level = rand.randint(20, 30)
     # perspective_pov = rand.uniform(-0.3, 0.3)
     # resize_factor = rand.uniform(0.75, 0.75)
     # rotation_angle = rand.uniform(-5.0, 5.0)
@@ -61,6 +64,7 @@ def corrupt(img, corruption_rate=0.05):
     # img = bl.pixelate_blur(pixelation_magnitude, img)
     # img = rs.apply_perspective(perspective_pov, img) # done
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+    img = ct.increase_contrast(img, contrast_level)
     # img = rs.reduce_size(resize_factor, img)
     # img = rs.rotate_image(rotation_angle, img)
     # img = bl.pixelate_blur(pixelation_magnitude, img)
@@ -72,10 +76,11 @@ def kernel_size_corrector(kernel_size):
     return kernel_size + 1 if kernel_size % 2 == 0 else kernel_size
 
 if __name__ == "__main__":
-    img = cv2.imread("../tests/lp.jpg")
+    image_data = input_data.load_images("data/40nice", 270, 90)
+    input_, blurred = image_data.next_batch(1)
+    # img = cv2.imread("data/40nice/0a0a7765-f5cc-4da9-b55f-d344e3fb2671-0.jpg")
+    # img = corrupt(input_[0])
 
-    img = corrupt(img)
-
-    cv2.imshow('Perspective', img)
+    cv2.imshow('Perspective', blurred[0])
     cv2.waitKey(0)
     cv2.destroyAllWindows()
