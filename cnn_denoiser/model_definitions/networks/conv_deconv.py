@@ -9,21 +9,29 @@ def summary_layer(net, name):
 
 def autoencoder(inputs, batch_size, dropout=0.65):
     # Encoder
-    net = tf.layers.conv2d(inputs, 64, [5, 5], strides=(3, 3), padding='SAME')
+    net = tf.layers.conv2d(inputs, 256, [5, 5], strides=(3, 3), padding='SAME')
     summary_layer(net, 'conv1')
 
     net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d(net, 64, [5, 5], strides=(2, 2), padding='SAME')
+    net = tf.layers.conv2d(net, 128, [5, 5], strides=(2, 2), padding='SAME')
     summary_layer(net, 'conv2')
+
+    net = tf.layers.dropout(net, dropout)
+    net = tf.layers.conv2d(net, 64, [5, 5], strides=(1, 1), padding='SAME')
+    summary_layer(net, 'conv3')
 
     # Decoder
     net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d_transpose(net, 64, [5, 5], strides=(2, 2), padding='SAME')
+    net = tf.layers.conv2d_transpose(net, 64, [5, 5], strides=(1, 1), padding='SAME')
     summary_layer(net, 'deconv1')
 
     net = tf.layers.dropout(net, dropout)
-    net = tf.layers.conv2d_transpose(net, channels, [4, 4], strides=(3, 3), padding='SAME')
+    net = tf.layers.conv2d_transpose(net, 128, [5, 5], strides=(2, 2), padding='SAME')
     summary_layer(net, 'deconv2')
+
+    net = tf.layers.dropout(net, dropout)
+    net = tf.layers.conv2d_transpose(net, channels, [5, 5], strides=(3, 3), padding='SAME')
+    summary_layer(net, 'deconv3')
 
     # Final tanh activation
     net = tf.nn.tanh(net)
