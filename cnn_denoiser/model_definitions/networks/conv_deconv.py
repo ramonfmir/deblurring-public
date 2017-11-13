@@ -16,9 +16,9 @@ def summary_layer(net, name):
     tf.summary.image(name, tf.expand_dims(tf.transpose(net, [3, 0, 1, 2])[0], 3), max_outputs=1)
     print(net.shape)
 
-def conv_layer_dropout(net, layer, out_channels, filter_dims, strides, padding, name, dropout=0.5, act_f = tf.nn.relu):
+def conv_layer_dropout(net, layer, out_channels, filter_dims, strides, padding, name, dropout=0.5, act_f = tf.nn.relu, pre=False):
     net = tf.layers.dropout(net, dropout)
-    return conv_layer(net, layer, out_channels, filter_dims, strides, padding, name, act_f)
+    return conv_layer(net, layer, out_channels, filter_dims, strides, padding, name, act_f, pre=pre)
 
 def conv_layer(net, layer, out_channels, filter_dims, strides, padding, name, act_f = tf.nn.relu, pre=False):
     net = layer(net, out_channels, filter_dims, strides=strides, padding=padding)
@@ -34,7 +34,7 @@ def pre_train_conv_layer(inputs, layer, out_channels, filt, strides, name, act_f
     name_scope = name + '_pretrain_scope'
     with tf.variable_scope(name_scope) as vs:
         net = conv_layer_dropout(inputs, forward, out_channels, filt, strides, 'SAME', name, dropout=dropout)
-        out = conv_layer(net, backward, int(inputs.shape[-1]), filt, strides, 'SAME', name + '_pretrain', pre=True)
+        out = conv_layer_dropout(net, backward, int(inputs.shape[-1]), filt, strides, 'SAME', name + '_pretrain', pre=True)
 
         trainable_variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=vs.name)
         var_list = [v for v in trainable_variables if name in v.name]
@@ -68,7 +68,7 @@ def autoencoder(original, inputs, batch_size, dropout=0.5):
     # Encoder
     # net = conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'SAME', 'conv1')
     net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv1', dropout=0)
-    # pretrain(1000, step, loss, original, 'conv1')
+    pretrain(1000, step, loss, original, 'conv1')
     # net = conv_layer_dropout(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'SAME', 'conv2', dropout)
     net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'conv2', dropout=dropout)
     # pretrain(pretrain_steps, step, loss, original, 'conv2')
