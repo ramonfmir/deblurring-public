@@ -12,6 +12,13 @@ image_height = 90
 batch_size = 30
 image_data = input_data.load_images(dataset_path, image_width, image_height)
 
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 1e-3
+N_steps_before_decay = 1000
+decay_rate = 0.1
+alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                           N_steps_before_decay, decay_rate, staircase=True)
+
 def summary_layer(net, name):
     tf.summary.image(name, tf.expand_dims(tf.transpose(net, [3, 0, 1, 2])[0], 3), max_outputs=1)
     print(net.shape)
@@ -42,7 +49,7 @@ def pre_train_conv_layer(inputs, layer, out_channels, filt, strides, name, act_f
             raise Exception("No two unique output layers to pretrain")
 
         cost = tf.reduce_mean(tf.square(out - inputs))
-        step = tf.train.GradientDescentOptimizer(1e-3).minimize(cost, var_list=var_list)
+        step = tf.train.GradientDescentOptimizer(alpha).minimize(cost, var_list=var_list, global_step=global_step)
 
         return net, step, cost
 
@@ -63,7 +70,7 @@ def pretrain(epochs, step, loss, placeholder, name):
         print(i, "Pretrain " + name, cost)
 
 
-pretrain_steps = 20
+pretrain_steps = 100
 def autoencoder(original, inputs, batch_size, dropout=0.5):
     # Encoder
     # net = conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'SAME', 'conv1')
@@ -71,25 +78,25 @@ def autoencoder(original, inputs, batch_size, dropout=0.5):
     pretrain(1000, step, loss, original, 'conv1')
     # net = conv_layer_dropout(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'SAME', 'conv2', dropout)
     net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'conv2', dropout=dropout)
-    # pretrain(pretrain_steps, step, loss, original, 'conv2')
+    pretrain(pretrain_steps, step, loss, original, 'conv2')
 
     # net = conv_layer_dropout(net, tf.layers.conv2d, 64, [5, 5], (1, 1), 'SAME', 'conv2', dropout)
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d, 64, [5, 5], (1, 1), 'conv3', dropout=dropout)
-    # pretrain(pretrain_steps, step, loss, original, 'conv3')
+    pretrain(pretrain_steps, step, loss, original, 'conv3')
 
     # how to fully connect? - dense
     # net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d, 64, [3, 3], (1, 1), 'code')
     # Decoder
     # net = conv_layer_dropout(net, tf.layers.conv2d_transpose, 64 , [5, 5], (1, 1), 'SAME', 'deconv1', dropout)
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 64, [5, 5], (1, 1), 'deconv1', dropout=dropout)
-    # pretrain(pretrain_steps, step, loss, original, 'deconv1')
+    pretrain(pretrain_steps, step, loss, original, 'deconv1')
 
     # net = conv_layer_dropout(net, tf.layers.conv2d_transpose, 128, [5, 5], (2, 2), 'SAME', 'deconv2', dropout)
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [5, 5], (2, 2), 'deconv2', dropout=dropout)
-    # pretrain(pretrain_steps, step, loss, original, 'deconv2')
+    pretrain(pretrain_steps, step, loss, original, 'deconv2')
     # net = conv_layer_dropout(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'SAME', 'deconv3', dropout)
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'deconv3', dropout=dropout)
-    # pretrain(pretrain_steps, step, loss, original, 'deconv3')
+    pretrain(pretrain_steps, step, loss, original, 'deconv3')
 
     # Final tanh activation
     net = tf.nn.tanh(net)
