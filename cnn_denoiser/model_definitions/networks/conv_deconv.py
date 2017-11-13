@@ -34,7 +34,7 @@ def pre_train_conv_layer(inputs, layer, out_channels, filt, strides, name, act_f
     name_scope = name + '_pretrain_scope'
     with tf.variable_scope(name_scope) as vs:
         net = conv_layer_dropout(inputs, forward, out_channels, filt, strides, 'SAME', name)
-        out = conv_layer_dropout(net, backward, int(inputs.shape[-1]), filt, strides, 'SAME', name + '_pretrain', pre=True)
+        out = conv_layer(net, backward, int(inputs.shape[-1]), filt, strides, 'SAME', name + '_pretrain', pre=True)
 
         trainable_variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=vs.name)
         var_list = [v for v in trainable_variables if name in v.name]
