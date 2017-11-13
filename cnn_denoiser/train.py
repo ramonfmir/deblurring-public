@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy
 import cv2
 import input_data
@@ -20,16 +19,24 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
+dataset_path = 'data/40nice'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 200
+batch_size = 30
 
 # Hyperparameters
 alpha = 0.001
+# global_step = tf.Variable(0, trainable=False)
+# starter_learning_rate = 1e-2
+# N_steps_before_decay = 20
+# decay_rate = 0.9
+# alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
+#                                            N_steps_before_decay, decay_rate, staircase=True)
+
+tf.summary.scalar('learning_rate', alpha)
 
 # Load the model
 model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/networks/" + FLAGS.model_name + ".py"
@@ -57,6 +64,7 @@ writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 def train_model(sess, num_iter):
     output = open("output.txt", "w")
     count = 0
+    print('Training model...')
     for i in range(num_iter):
         summary = None
         for batch_n in range(batch_per_ep):
@@ -68,9 +76,9 @@ def train_model(sess, num_iter):
             print(epoch_cost)
 
         count += 1
-        writer.add_summary(summary, count)
-
-        saver.save(sess, model_save_path)
+        if count % 10 == 0:
+            writer.add_summary(summary, int(count / 10))
+            saver.save(sess, model_save_path)
 
     output.close()
 
