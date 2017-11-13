@@ -14,8 +14,8 @@ image_data = input_data.load_images(dataset_path, image_width, image_height)
 
 global_step = tf.Variable(0, trainable=False)
 starter_learning_rate = 1e-3
-N_steps_before_decay = 1000
-decay_rate = 0.1
+N_steps_before_decay = 600
+decay_rate = 0.9
 alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            N_steps_before_decay, decay_rate, staircase=True)
 
@@ -70,12 +70,12 @@ def pretrain(epochs, step, loss, placeholder, name):
         print(i, "Pretrain " + name, cost)
 
 
-pretrain_steps = 0
+pretrain_steps = 50
 def autoencoder(original, inputs, batch_size, dropout=0.5):
     # Encoder
     # net = conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'SAME', 'conv1')
     net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv1', dropout=0)
-    pretrain(100, step, loss, original, 'conv1')
+    pretrain(1000, step, loss, original, 'conv1')
     # net = conv_layer_dropout(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'SAME', 'conv2', dropout)
     net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'conv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'conv2')
@@ -97,7 +97,7 @@ def autoencoder(original, inputs, batch_size, dropout=0.5):
     # net = conv_layer_dropout(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'SAME', 'deconv3', dropout)
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'deconv3', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv3')
-
+    # net = conv_layer_dropout(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'SAME', 'conv1_pretrain_scope/conv1_pretrain', dropout=dropout)
     # Final tanh activation
     net = tf.nn.tanh(net)
     return net
