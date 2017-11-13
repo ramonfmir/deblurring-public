@@ -84,7 +84,7 @@ def train_model(sess, num_iter):
 
 # Run continue training / restart training
 def main(argv=None):
-    with tf.Session() as sess:
+    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
         if FLAGS.run == 'continue':
             saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':

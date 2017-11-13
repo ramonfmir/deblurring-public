@@ -18,17 +18,17 @@ def corrupt(img):
     contrast_level = rand.randint(1, 30)
 
     # Just rotate the original.
-    original = nice_goal_image(deepcopy(img))
+    original = deepcopy(img)
     original = rs.apply_perspective(perspective_pov, original)
     original = rs.reduce_size(resize_factor, original)
-    original = rs.random_border(original)
+    #original = rs.random_border(original)
 
     # Rotate and corrupt the corrupted.
     img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
     img = rs.apply_perspective(perspective_pov, img)
     img = rs.reduce_size(resize_factor, img)
-    img = rs.random_border(img)
+    #img = rs.random_border(img)
     img = ct.increase_contrast(img, contrast_level)
 
     return original, img

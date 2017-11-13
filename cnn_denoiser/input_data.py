@@ -65,14 +65,13 @@ class data_set(object):
     def normalise_image(self, image):
         return np.asarray(np.multiply(image.astype(np.float32), 1.0 / 255.0))
 
-
     def blur_batch(self, original_batch):
         goal_batch = []
         corrupted_batch = []
         for img in original_batch:
             goal, corrupted = corrupter.corrupt(img)
-            goal = normalise_image(goal)
-            corrupted = normalise_image(corrupted)
+            goal = self.normalise_image(goal)
+            corrupted = self.normalise_image(corrupted)
             goal_batch.append(goal)
             corrupted_batch.append(corrupted)
 
