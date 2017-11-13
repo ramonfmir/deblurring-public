@@ -6,7 +6,7 @@ import os
 # Parameters
 channels = 1
 
-dataset_path = 'data/40nicer'
+dataset_path = 'data/40nice'
 image_width = 270
 image_height = 90
 batch_size = 30
