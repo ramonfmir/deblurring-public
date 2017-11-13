@@ -6,7 +6,7 @@ import os
 # Parameters
 channels = 1
 
-dataset_path = 'data/40nice'
+dataset_path = 'data/40nicer'
 image_width = 270
 image_height = 90
 batch_size = 30
@@ -65,17 +65,17 @@ def pretrain(epochs, step, loss, placeholder, name):
     for i in range(epochs):
         # should be random inputs?
         input_, blurred = image_data.next_batch(batch_size)
-        _, cost, summary = sess.run([step, loss, summary_op], feed_dict={placeholder: input_})
+        _, cost, summary = sess.run([step, loss, summary_op], feed_dict={placeholder: blurred})
         writer.add_summary(summary, i)
         print(i, "Pretrain " + name, cost)
 
 
-pretrain_steps = 100
+pretrain_steps = 0
 def autoencoder(original, inputs, batch_size, dropout=0.5):
     # Encoder
     # net = conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'SAME', 'conv1')
     net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv1', dropout=0)
-    pretrain(1000, step, loss, original, 'conv1')
+    pretrain(100, step, loss, original, 'conv1')
     # net = conv_layer_dropout(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'SAME', 'conv2', dropout)
     net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'conv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'conv2')
