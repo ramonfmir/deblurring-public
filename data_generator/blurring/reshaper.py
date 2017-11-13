@@ -3,7 +3,7 @@ import math
 import numpy as np
 import cv2
 import scipy.misc as sc
-from random import randint
+from numpy.random import randint
 
 # Applies a 'perspective' transformation. The pov is a number between -1 and 1.
 # It will affect the angle of the perspective.
@@ -28,7 +28,9 @@ def apply_perspective(pov, img):
                         [width, height - bottom_right]])
 
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
-    img = cv2.warpPerspective(img, M, (width, height), borderMode=cv2.BORDER_REPLICATE)
+    img = cv2.warpPerspective(img, M, (width, height),
+                              borderMode=cv2.BORDER_CONSTANT,
+                              borderValue=[0, 255, 0])
 
     return img
 
@@ -46,19 +48,20 @@ def reduce_size(magnitude, img):
     img = cv2.resize(img, (new_width, new_height))
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
-                                    #   cv2.BORDER_CONSTANT,value=[0, 0, 0]
-                                 cv2.BORDER_REPLICATE)
+                                 cv2.BORDER_CONSTANT,value=[0, 255, 0])
 
     return new_img
 
 # Fill black borders (created by reduce_size, apply_perspective) with random noise
 def random_border(img):
-    black = [0, 0, 0]
-    white = 255
-    for i, row in enumerate(img):
-        for j, cell in enumerate(row):
-            if np.array_equal(cell, black):
-                img[i][j] = [randint(0, white) for x in range(len(black))]
+    bright_green = np.array([0, 255, 0])
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            pixel = img[i, j]
+            if np.array_equal(pixel, bright_green):
+                img[i, j] = randint(0,255,(3)).tolist()
+                
+    return img
 
 # Apply rotation.
 def rotate_image(angle, img):
