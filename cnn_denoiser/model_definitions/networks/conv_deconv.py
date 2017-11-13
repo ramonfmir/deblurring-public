@@ -87,7 +87,7 @@ def autoencoder(original, inputs, batch_size, dropout=0.5):
     net = conv_layer_dropout(net, tf.layers.conv2d_transpose, 128, [5, 5], (2, 2), 'SAME', 'deconv2', dropout)
     # net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [3, 3], (2, 2), 'deconv2')
     # pretrain(pretrain_steps, step, loss, original, 'deconv2')
-    net = conv_layer_dropout(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'SAME', 'deconv3', dropout)
+    net = conv_layer(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'SAME', 'deconv3')
     # net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [3, 3], (3, 3), 'deconv3')
     # pretrain(pretrain_steps, step, loss, original, 'deconv3')
 
