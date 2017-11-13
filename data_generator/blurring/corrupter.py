@@ -1,34 +1,53 @@
 import data_generator.blurring.blurrer as bl
 import data_generator.blurring.reshaper as rs
 import data_generator.blurring.contrast as ct
-import input_data
 
 import cv2
+import numpy as np
 import random as rand
+from copy import deepcopy
 
-def corrupt(img, corruption_rate=0.05):
-    if rand.uniform(0, 1) < corruption_rate:
-        return img
-
-    # gaussian_kernel_size = 3
-    # gaussian_sd = 2
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(13, 19))
+def corrupt(img):
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 9))
+    gaussian_sd = rand.randint(1, 7)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(5, 21))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
-    contrast_level = rand.randint(20, 30)
-    # perspective_pov = rand.uniform(-0.3, 0.3)
-    # resize_factor = rand.uniform(0.75, 0.75)
-    # rotation_angle = rand.uniform(-5.0, 5.0)
+    perspective_pov = rand.uniform(-0.5, 0.5)
+    resize_factor = rand.uniform(0.2, 1.00)
+    contrast_level = rand.randint(1, 30)
 
-    # img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
-    # img = bl.pixelate_blur(pixelation_magnitude, img)
-    # img = rs.apply_perspective(perspective_pov, img) # done
+    # Just rotate the original.
+    original = nice_goal_image(deepcopy(img))
+    original = rs.apply_perspective(perspective_pov, original)
+    original = rs.reduce_size(resize_factor, original)
+    original = rs.random_border(original)
+
+    # Rotate and corrupt the corrupted.
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+    img = rs.apply_perspective(perspective_pov, img)
+    img = rs.reduce_size(resize_factor, img)
+    img = rs.random_border(img)
     img = ct.increase_contrast(img, contrast_level)
-    # img = rs.reduce_size(resize_factor, img)
-    # img = rs.rotate_image(rotation_angle, img)
-    # img = bl.pixelate_blur(pixelation_magnitude, img)
-    return img
+
+    return original, img
+
+def nice_goal_image(img):
+    # convert to np.float32
+    Z = img.reshape((-1,3))
+    Z = Z.astype(np.float32)
+
+    # define criteria, number of clusters(K) and apply kmeans()
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+    K = 10
+    ret,label,center = cv2.kmeans(Z,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)
+
+    res = center[label.flatten()]
+    res2 = res.reshape((img.shape))
+
+    return res2
+
 
 def kernel_size_corrector(kernel_size):
     kernel_size = int(kernel_size)

@@ -56,9 +56,10 @@ def pre_train_conv_layer(inputs, layer, out_channels, filt, strides, name, act_f
 files = glob.glob('./pretrain/*')
 for f in files:
     os.remove(f)
+
 writer = tf.summary.FileWriter("./pretrain", graph=tf.get_default_graph())
 def pretrain(epochs, step, loss, placeholder, name):
-    sess = tf.Session()
+    sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
     sess.run(tf.global_variables_initializer())
     summary_op = tf.summary.merge_all()
 
