@@ -53,24 +53,4 @@ def autoencoder(inputs, batch_size, dropout=0.65):
     net = tf.nn.lrn(net)
     summary_layer(net, 'conv5')
 
-
-    # net = tf.layers.dropout(net, dropout)
-    # net = tf.layers.conv2d(net, 64, [3, 3], strides=(2, 2), padding='SAME')
-    # summary_layer(net, 'conv3')
-    #
-    # # Decoder
-    # net = tf.layers.dropout(net, dropout)
-    # net = tf.layers.conv2d_transpose(net, 64, [3, 3], strides=(2, 2), padding='SAME')
-    # summary_layer(net, 'deconv1')
-    #
-    # net = tf.layers.dropout(net, dropout)
-    # net = tf.layers.conv2d_transpose(net, channels, [4, 4], strides=(3, 3), padding='SAME')
-    # summary_layer(net, 'deconv2')
-
-    # Outlier rejection (no dropout)
-    #net = tf.layers.conv2d(net, channels, [1, 1], strides=(1, 1), padding='SAME')
-    #summary_layer(net, 'outlier_rej')
-
-    # Final tanh activation
-    # net = tf.nn.tanh(net)
     return net
