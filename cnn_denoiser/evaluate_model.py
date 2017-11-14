@@ -13,15 +13,16 @@ import glob
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-# dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
-dataset_path = 'data/100labeledLPforvalidation_same_dims_scaled'
+dataset_path = 'data/100labeledLPforvalidation'
 logs_directory = './evaluate_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 1
+batch_size = 30
 num_test = int(100 / batch_size)
+
+global_step = tf.Variable(0, trainable=False)
 
 # Method to show results visually
 def show_encoding(sess, writer, original, network):
@@ -29,9 +30,9 @@ def show_encoding(sess, writer, original, network):
     writer.add_summary(summary_orig, 0)
 
 # Evaluate model
-with tf.Session() as sess:
+with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
     # Load graph
-    network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, 0.001)
+    network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, 0.001, global_step)
 
     saver = tf.train.Saver()
     saver.restore(sess, model_save_path)

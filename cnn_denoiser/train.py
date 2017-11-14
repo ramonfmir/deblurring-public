@@ -28,13 +28,13 @@ image_height = 90
 batch_size = 30
 
 # Hyperparameters
-alpha = 0.001
-# global_step = tf.Variable(0, trainable=False)
-# starter_learning_rate = 1e-2
-# N_steps_before_decay = 20
-# decay_rate = 0.9
-# alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
-#                                            N_steps_before_decay, decay_rate, staircase=True)
+# alpha = 0.001
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 1e-3
+N_steps_before_decay = 1000
+decay_rate = 0.9
+alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                           N_steps_before_decay, decay_rate, staircase=True)
 
 tf.summary.scalar('learning_rate', alpha)
 
@@ -44,7 +44,7 @@ spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
@@ -84,7 +84,7 @@ def train_model(sess, num_iter):
 
 # Run continue training / restart training
 def main(argv=None):
-    with tf.Session() as sess:
+    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
         if FLAGS.run == 'continue':
             saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':
