@@ -1,3 +1,5 @@
+import glob, os
+
 import numpy as np
 import cv2
 import sys
@@ -23,7 +25,15 @@ def get_n_char(img_src, n):
         dot_size = int(width*dot_ratio)
         return  img[ : , start + dot_size + n*char_size : start + dot_size + (n+1)*char_size ]
 
-def permute(img, chars_perms):
+def permute(img_src):
+    img = cv2.imread(img_src)
+
+    chars_perms = []
+    for i in range(1,7):
+        char = get_n_char(img_src, i)
+        chars_perms.append(char)
+
+    chars_perms = list(permutations(chars_perms))
     height, width, _  = img.shape
 
     start = int(width*start_ratio)
@@ -32,24 +42,21 @@ def permute(img, chars_perms):
 
     permed_image = deepcopy(img)
 
-    for n, chars in enumerate(chars_perms[4800]):
-        if (n < 2):
-            permed_image[ : , start + n*char_size : start + (n+1)*char_size ] = chars
-        else:
-            permed_image[ : , start + dot_size + n*char_size : start + dot_size + (n+1)*char_size ] = chars
+    for i in range(1, len(chars_perms)):
+        for n, chars in enumerate(chars_perms[i]):
+            n += 1
+            if (n < 2):
+                permed_image[ : , start + n*char_size : start + (n+1)*char_size ] = chars
+            else:
+                permed_image[ : , start + dot_size + n*char_size : start + dot_size + (n+1)*char_size ] = chars
+        img_dst = img_src + '_' + str(i)
+        print("writing to ", img_dst)
+        cv2.imwrite(img_dst, permed_image)
 
-    return permed_image
+    # return permed_image
 
 if __name__ == '__main__':
-    img_path = sys.argv[1]
-    img = cv2.imread(img_path)
-    chars = []
-    for i in range(7):
-        char = get_n_char(img_path, i)
-        chars.append(char)
-
-    permed_chars = list(permutations(chars))
-    test = permute(img, permed_chars)
-
-    cv2.imshow("char", test)
-    cv2.waitKey(0)
+    dataset_path = sys.argv[1]
+    for file_path in os.listdir(dataset_path):
+        file_path = dataset_path + "/" + file_path
+        permute(file_path)
