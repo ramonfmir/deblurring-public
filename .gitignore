@@ -5,6 +5,9 @@ data/100labeledLPforvalidation_same_dims_scaled/
 # Trained models
 trained_models
 
+# Pretraining data
+pretrain
+
 # Logs
 *logs*
 output.txt
