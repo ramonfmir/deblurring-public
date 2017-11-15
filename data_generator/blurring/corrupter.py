@@ -8,14 +8,15 @@ import random as rand
 from copy import deepcopy
 
 def corrupt(img):
-    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 9))
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 21))
     gaussian_sd = rand.randint(1, 7)
     motion_blur_kernel_size = kernel_size_corrector(rand.randint(5, 21))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(2, 4)
-    perspective_pov = rand.uniform(-0.5, 0.5)
-    resize_factor = rand.uniform(0.2, 1.00)
+    perspective_pov = rand.uniform(-0.4, 0.4)
+    resize_factor = rand.uniform(0.8, 1.00)
     contrast_level = rand.randint(1, 30)
+    pixelation_magnitude = rand.randint(1, 4)
 
     # Just rotate the original.
     original = deepcopy(img)
@@ -30,6 +31,7 @@ def corrupt(img):
     img = rs.reduce_size(resize_factor, img)
     #img = rs.random_border(img)
     img = ct.increase_contrast(img, contrast_level)
+    img = bl.pixelate_blur(pixelation_magnitude, img)
 
     return original, img
 

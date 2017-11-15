@@ -44,7 +44,7 @@ spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step, training=True)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)

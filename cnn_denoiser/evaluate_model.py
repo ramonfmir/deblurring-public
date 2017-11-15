@@ -14,7 +14,7 @@ import glob
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
 dataset_path = 'data/100labeledLPforvalidation'
-logs_directory = './evaluate_logs/'
+logs_directory = 'evaluate_logs'
 
 # Parameters
 image_width = 270
@@ -28,17 +28,22 @@ def show_encoding(sess, writer, original, network):
     summary_orig = sess.run(network.summary_op, feed_dict={network.corrupted: original, network.original: original})
     writer.add_summary(summary_orig, 0)
 
-# Evaluate model
-with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
-    # Load graph
-    network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, 0.001, global_step, training=False)
+if __name__ == "__main__":
+    files = glob.glob(logs_directory + '/*')
+    for f in files:
+        os.remove(f)
 
-    saver = tf.train.Saver()
-    saver.restore(sess, model_save_path)
+    # Evaluate model
+    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
+        # Load graph
+        network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, 0.001, global_step, training=False)
 
-    dataset = input_data.load_images(dataset_path, image_width,image_height)
+        saver = tf.train.Saver()
+        saver.restore(sess, model_save_path)
 
-    writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
+        dataset = input_data.load_images(dataset_path, image_width,image_height)
 
-    for img in dataset.imgs:
-        show_encoding(sess, writer, [dataset.normalise_image(img)], network)
+        writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
+
+        for img in dataset.imgs:
+            show_encoding(sess, writer, [dataset.normalise_image(img)], network)
