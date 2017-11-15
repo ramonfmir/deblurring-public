@@ -9,7 +9,7 @@ channels = 1
 dataset_path = 'data/40nice'
 image_width = 270
 image_height = 90
-batch_size = 30
+batch_size = 20
 image_data = input_data.load_images(dataset_path, image_width, image_height)
 
 global_step = tf.Variable(0, trainable=False)
