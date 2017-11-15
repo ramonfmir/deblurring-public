@@ -36,9 +36,9 @@ with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
     saver = tf.train.Saver()
     saver.restore(sess, model_save_path)
 
-    image_data = input_data.load_images(dataset_path, image_width,image_height)
+    dataset = input_data.load_images(dataset_path, image_width,image_height)
 
     writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 
-    for i in range(0, 100, batch_size):
-        show_encoding(sess, writer, image_data.next_batch(batch_size)[0], network)
+    for img in dataset.imgs:
+        show_encoding(sess, writer, [dataset.normalise_image(img)], network)

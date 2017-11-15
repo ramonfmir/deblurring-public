@@ -3,8 +3,10 @@ import numpy as np
 from .model import Model
 
 def initialise(image_width, image_height, autoencoder, batch_size, lr, global_step, training):
+    input_size = batch_size if training else 1
+
     # blurred image, input to the network
-    corrupted = tf.placeholder(tf.float32, (batch_size, image_height, image_width, 3), name='corrupted')
+    corrupted = tf.placeholder(tf.float32, (input_size, image_height, image_width, 3), name='corrupted')
     corrupted_greyscale = tf.reduce_mean(corrupted, axis=3,keep_dims = True)
     tf.summary.image('corrupted_greyscale', corrupted_greyscale, max_outputs=1)
 
@@ -12,7 +14,7 @@ def initialise(image_width, image_height, autoencoder, batch_size, lr, global_st
         deblurred = autoencoder(corrupted, corrupted_greyscale, training)  # create the Autoencoder network
 
     # original, unblurred image to the network
-    original = tf.placeholder(tf.float32, (batch_size, image_height, image_width, 3), name='og')
+    original = tf.placeholder(tf.float32, (input_size, image_height, image_width, 3), name='og')
     original_greyscale = tf.reduce_mean(original, axis=3, keep_dims = True)
     tf.summary.image('original_greyscale', original_greyscale, max_outputs=1)
 
