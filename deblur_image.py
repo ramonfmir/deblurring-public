@@ -1,5 +1,6 @@
 import tensorflow as tf
 import sys
+import os
 
 from cnn_denoiser.model_definitions import autoencoder_model as model
 from cnn_denoiser.model_definitions.networks import moussaka as autoencoder_network
@@ -16,21 +17,20 @@ from PIL import Image
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
+images_path = 'data/100labeledLPforvalidation'
+clean_images_path = 'data/100clean'
 
 # Parameters
 image_width = 270
 image_height = 90
 batch_size = 20
 
-global_step = tf.Variable(0, trainable=False)
+# Lil hack
+reuse = False
 
-init_op = tf.global_variables_initializer()
-
-
-if __name__ == "__main__":
-    file_name = sys.argv[1]
-    img = cv2.imread(file_name)
-    img = cv2.resize(img, (image_width, image_height), 0, 0, cv2.INTER_CUBIC)
+def save_clean(imgs):
+    global_step = tf.Variable(0, trainable=False)
+    init_op = tf.global_variables_initializer()
 
     # Evaluate model
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
@@ -39,16 +39,19 @@ if __name__ == "__main__":
         saver = tf.train.Saver()
         saver.restore(sess, model_save_path)
 
-        img = [np.asarray(np.multiply(img.astype(np.float32), 1.0 / 255.0))]
+        for f in imgs:
+            img = cv2.imread(f)
+            img = cv2.resize(img, (image_width, image_height), 0, 0, cv2.INTER_CUBIC)
+
+            img = [np.asarray(np.multiply(img.astype(np.float32), 1.0 / 255.0))]
         
-        clean = sess.run([network.deblurred], feed_dict={network.corrupted: img, network.original: img})[0]
-        #print(clean)
-        #clean = 
-        #result = clean.reshape((1, 90, 270, 1))
+            clean = sess.run([network.deblurred], feed_dict={network.corrupted: img, network.original: img})[0]
+            clean = clean[0, ..., 0]
 
-    print(clean.shape)
-    clean = clean[0, ..., 0]
-    print(clean.shape)
+            scipy.misc.imsave(clean_images_path + "/" + os.path.basename(f), clean)
 
-    #cv2.imshow('hey', clean)
-    scipy.misc.imsave('result.jpg', clean)
+
+if __name__ == "__main__":
+    images_path = os.path.join(images_path, '*g')
+    files = glob.glob(images_path)
+    save_clean(files)
