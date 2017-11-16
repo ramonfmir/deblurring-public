@@ -19,13 +19,13 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/40nice'
+dataset_path = 'data/1441clean'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 30
+batch_size = 20
 
 # Hyperparameters
 # alpha = 0.001
@@ -44,7 +44,7 @@ spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step, training=True)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
@@ -76,9 +76,8 @@ def train_model(sess, num_iter):
             print(epoch_cost)
 
         count += 1
-        if count % 10 == 0:
-            writer.add_summary(summary, int(count / 10))
-            saver.save(sess, model_save_path)
+        writer.add_summary(summary, int(count))
+        saver.save(sess, model_save_path)
 
     output.close()
 
