@@ -1,5 +1,5 @@
 import tensorflow as tf
-import input_data
+import cnn_denoiser.input_data as input_data
 import glob
 import os
 
@@ -86,20 +86,29 @@ def autoencoder(original, inputs, training):
     dropout = training_dropout if training else 0.0
 
     # Encoder
-    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv1', dropout=0.0)
+    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 512, [5, 5], (3, 3), 'conv1', dropout=0.0)
     pretrain(pretrain_steps_first_layer, step, loss, original, 'conv1', training)
+    #print(net.shape)
 
-    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (2, 2), 'conv2', dropout=dropout)
+    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'conv2', training)
+    #print(net.shape)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d, 64, [5, 5], (1, 1), 'conv3', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (1, 1), 'conv3', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'conv3', training)
+    #print(net.shape)
+
+    # Fully connected layer
+    #net = tf.reshape(net, [-1, 10 * 30 * 16])
+    #net = tf.layers.dense(net, units=(10 * 30 * 16), activation=tf.nn.relu)
+    #net = tf.layers.dropout(inputs=net, rate=dropout, training=training)
+    #net = tf.reshape(net, [-1, 10, 30, 16])
 
     # Decoder
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 64, [5, 5], (1, 1), 'deconv1', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [5, 5], (1, 1), 'deconv1', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv1', training)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [5, 5], (2, 2), 'deconv2', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 256, [5, 5], (3, 3), 'deconv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv2', training)
 
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'deconv3', dropout=dropout)
