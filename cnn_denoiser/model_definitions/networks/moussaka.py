@@ -1,5 +1,5 @@
 import tensorflow as tf
-import input_data
+import cnn_denoiser.input_data as input_data
 import glob
 import os
 
@@ -12,7 +12,7 @@ image_height = 90
 batch_size = 20
 image_data = input_data.load_images(dataset_path, image_width, image_height)
 
-pretrain_steps_first_layer = 1000
+pretrain_steps_first_layer = 50
 pretrain_steps = 50
 
 training_dropout = 0.5
