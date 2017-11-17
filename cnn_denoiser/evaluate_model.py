@@ -12,7 +12,7 @@ import scipy.misc
 import glob
 
 # Paths
-model_save_path = 'trained_models/deblurring_model'
+model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
 dataset_path = 'data/100labeledLPforvalidation'
 logs_directory = 'evaluate_logs'
 

@@ -12,8 +12,8 @@ image_height = 90
 batch_size = 20
 image_data = input_data.load_images(dataset_path, image_width, image_height)
 
-pretrain_steps_first_layer = 50
-pretrain_steps = 50
+pretrain_steps_first_layer = 1000
+pretrain_steps = 100
 
 training_dropout = 0.5
 
@@ -90,7 +90,7 @@ def autoencoder(original, inputs, training):
     pretrain(pretrain_steps_first_layer, step, loss, original, 'conv1', training)
     #print(net.shape)
 
-    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv2', dropout=dropout)
+    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 256, [5, 5], (2, 2), 'conv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'conv2', training)
     #print(net.shape)
 
@@ -108,7 +108,7 @@ def autoencoder(original, inputs, training):
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [5, 5], (1, 1), 'deconv1', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv1', training)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 256, [5, 5], (3, 3), 'deconv2', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 256, [5, 5], (2, 2), 'deconv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv2', training)
 
     net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'deconv3', dropout=dropout)
