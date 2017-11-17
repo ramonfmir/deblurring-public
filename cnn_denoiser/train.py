@@ -23,9 +23,9 @@ dataset_path = 'data/3440awesome'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
-image_width = 270
-image_height = 90
-batch_size = 20
+image_width = 256
+image_height = 80
+batch_size = 40
 
 # Hyperparameters
 # alpha = 0.001
