@@ -6,10 +6,11 @@ import os
 # Parameters
 channels = 1
 
-dataset_path = 'data/40nice'
-image_width = 270
-image_height = 90
+dataset_path = 'data/40nice_same_dims_scaled'
+image_width = 256
+image_height = 80
 batch_size = 20
+
 image_data = input_data.load_images(dataset_path, image_width, image_height)
 
 pretrain_steps_first_layer = 1000
@@ -86,33 +87,30 @@ def autoencoder(original, inputs, training):
     dropout = training_dropout if training else 0.0
 
     # Encoder
-    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 512, [5, 5], (3, 3), 'conv1', dropout=0.0)
+    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 864, [17, 17], (2, 2), 'conv1', dropout=0.0)
     pretrain(pretrain_steps_first_layer, step, loss, original, 'conv1', training)
-    #print(net.shape)
 
-    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 256, [5, 5], (2, 2), 'conv2', dropout=dropout)
-    pretrain(pretrain_steps, step, loss, original, 'conv2', training)
-    #print(net.shape)
+    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 288, [9, 9], (2, 2), 'conv2', dropout=dropout)
+    pretrain(pretrain_steps_first_layer, step, loss, original, 'conv2', training)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (1, 1), 'conv3', dropout=dropout)
+    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 96, [7, 7], (2, 2), 'conv3', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'conv3', training)
-    #print(net.shape)
 
-    # Fully connected layer
-    #net = tf.reshape(net, [-1, 10 * 30 * 16])
-    #net = tf.layers.dense(net, units=(10 * 30 * 16), activation=tf.nn.relu)
-    #net = tf.layers.dropout(inputs=net, rate=dropout, training=training)
-    #net = tf.reshape(net, [-1, 10, 30, 16])
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d, 32, [5, 5], (1, 1), 'conv4', dropout=dropout)
+    pretrain(pretrain_steps, step, loss, original, 'conv4', training)
 
     # Decoder
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [5, 5], (1, 1), 'deconv1', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 32, [5, 5], (1, 1), 'deconv2', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv1', training)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 256, [5, 5], (2, 2), 'deconv2', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 96, [7, 7], (2, 2), 'deconv3', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv2', training)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [5, 5], (3, 3), 'deconv3', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 288, [9, 9], (2, 2), 'deconv4', dropout=dropout)
     pretrain(pretrain_steps, step, loss, original, 'deconv3', training)
+
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, channels, [17, 17], (2, 2), 'deconv3', dropout=dropout)
+    pretrain(pretrain_steps, step, loss, original, 'deconv4', training)
 
     # Final tanh activation
     net = tf.nn.tanh(net)

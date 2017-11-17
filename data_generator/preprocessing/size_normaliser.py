@@ -2,14 +2,14 @@ import glob, os
 from PIL import Image
 
 # Path to the original datasets
-dataset_directory_path = "../../data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-dataset_path = dataset_directory_path + "/40nice"
+dataset_directory_path = "data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+dataset_path = dataset_directory_path + "/100labeledLPforvalidation"
 # dataset_path = dataset_directory_path + "/4000unlabeledLP"
 print(dataset_directory_path, dataset_path)
 
 dataset_img_ext = "jpg"
 img_type = "JPEG"
-max_size = 270, 90
+max_size = 256, 80
 
 def process_dataset(new_dataset_path, dataset_img_ext, process):
     for file_path in os.listdir(dataset_path):

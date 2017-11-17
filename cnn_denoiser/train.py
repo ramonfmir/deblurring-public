@@ -19,13 +19,13 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/3440awesome'
+dataset_path = 'data/3440awesome_same_dims_scaled'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
-image_width = 270
-image_height = 90
-batch_size = 20
+image_width = 256
+image_height = 80
+batch_size = 172
 
 # Hyperparameters
 # alpha = 0.001

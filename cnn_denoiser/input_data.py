@@ -16,6 +16,9 @@ from data_generator.blurring import contrast
 # The unziped files of images must exits in the relative directory
 # ../datasets/4000unlabeledLP_same_dims_scaled
 
+def resize_and_pad(img, new_width, new_height):
+
+
 def load_images(train_path, image_size_x,image_size_y):
     images = []
     img_names = []
@@ -25,7 +28,7 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
-        image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
+        #image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
 
         images.append(image)
 
