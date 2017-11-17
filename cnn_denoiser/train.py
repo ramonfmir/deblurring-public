@@ -19,22 +19,26 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/40nice'
+dataset_path = 'data/1441clean'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
 image_width = 270
 image_height = 90
+<<<<<<< HEAD
 batch_size = 10
+=======
+batch_size = 20
+>>>>>>> 2b45d66530d16bf4b20d10d5799147952f837624
 
 # Hyperparameters
-alpha = 0.001
-# global_step = tf.Variable(0, trainable=False)
-# starter_learning_rate = 1e-2
-# N_steps_before_decay = 20
-# decay_rate = 0.9
-# alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
-#                                            N_steps_before_decay, decay_rate, staircase=True)
+# alpha = 0.001
+global_step = tf.Variable(0, trainable=False)
+starter_learning_rate = 1e-3
+N_steps_before_decay = 1000
+decay_rate = 0.9
+alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
+                                           N_steps_before_decay, decay_rate, staircase=True)
 
 tf.summary.scalar('learning_rate', alpha)
 
@@ -44,7 +48,7 @@ spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
 
-network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha)
+network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, alpha, global_step, training=True)
 
 # Load data
 image_data = input_data.load_images(dataset_path, image_width,image_height)
@@ -84,8 +88,12 @@ def train_model(sess, num_iter):
 
 # Run continue training / restart training
 def main(argv=None):
+<<<<<<< HEAD
     #config=tf.ConfigProto(log_device_placement=True)
     with tf.Session(config= tf.ConfigProto(allow_soft_placement = True)) as sess, tf.device('/cpu:0'):
+=======
+    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
+>>>>>>> 2b45d66530d16bf4b20d10d5799147952f837624
         if FLAGS.run == 'continue':
             saver.restore(sess, model_save_path)
         elif FLAGS.run == 'restart':

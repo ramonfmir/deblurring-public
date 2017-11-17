@@ -2,7 +2,7 @@ import tensorflow as tf
 import sys
 
 from model_definitions import autoencoder_model as model
-from model_definitions.networks import tutorial_cnn as autoencoder_network
+from model_definitions.networks import moussaka as autoencoder_network
 
 import input_data
 import numpy as np
@@ -12,40 +12,38 @@ import scipy.misc
 import glob
 
 # Paths
-model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-# dataset_path = 'data/4000unlabeledLP_same_dims_scaled'
-dataset_path = 'data/100labeledLPforvalidation_same_dims_scaled'
-images_path = 'cnn_denoiser/results_4000/'
-logs_directory = './evaluate_logs/'
+model_save_path = 'trained_models/deblurring_model'
+dataset_path = 'data/100labeledLPforvalidation'
+logs_directory = 'evaluate_logs'
 
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 1
-num_iter = 10
+batch_size = 20
 
+global_step = tf.Variable(0, trainable=False)
 
 # Method to show results visually
-def show_encoding(sess, writer, original, corrupted, network):
+def show_encoding(sess, writer, original, network):
     summary_orig = sess.run(network.summary_op, feed_dict={network.corrupted: original, network.original: original})
-    summary_corr = sess.run(network.summary_op, feed_dict={network.corrupted: corrupted, network.original: original})
+    writer.add_summary(summary_orig, 0)
 
-    writer.add_summary(summary_corr, i)
+if __name__ == "__main__":
+    files = glob.glob(logs_directory + '/*')
+    for f in files:
+        os.remove(f)
 
-# Evaluate model
-with tf.Session() as sess:
-    # Load graph
-    network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size)
+    # Evaluate model
+    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
+        # Load graph
+        network = model.initialise(image_width, image_height, autoencoder_network.autoencoder, batch_size, 0.001, global_step, training=False)
 
-    saver = tf.train.Saver()
-    saver.restore(sess, model_save_path)
+        saver = tf.train.Saver()
+        saver.restore(sess, model_save_path)
 
-    # Load MNIST data
-    image_data = input_data.load_images(dataset_path, image_width,image_height)
+        dataset = input_data.load_images(dataset_path, image_width,image_height)
 
-    # Test images used for examples in README
-    writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
+        writer = tf.summary.FileWriter(logs_directory, graph=tf.get_default_graph())
 
-    for i in range(num_iter):
-        test_ori_images, test_corr_images = image_data.next_batch(batch_size)
-        show_encoding(sess, writer, test_ori_images, test_corr_images, network)
+        for img in dataset.imgs:
+            show_encoding(sess, writer, [dataset.normalise_image(img)], network)

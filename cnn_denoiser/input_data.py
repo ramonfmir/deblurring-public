@@ -60,13 +60,16 @@ class data_set(object):
         # Apply blur to batch originals
         original, blurred = self.blur_batch(batch)
 
+<<<<<<< HEAD
         # Normalise colour
         blurred = self.normalise_batch(blurred)
         original = self.normalise_batch(original)
+=======
+>>>>>>> 2b45d66530d16bf4b20d10d5799147952f837624
         return original, blurred
 
-    def normalise_batch(self, batch):
-        return [np.asarray(np.multiply(image.astype(np.float32), 1.0 / 255.0)) for image in batch]
+    def normalise_image(self, image):
+        return np.asarray(np.multiply(image.astype(np.float32), 1.0 / 255.0))
 
         return self.training_batch(batch)#np.asarray(batch), np.asarray(self.blur_batch(batch))
 
@@ -75,6 +78,11 @@ class data_set(object):
         corrupted_batch = []
         for img in original_batch:
             goal, corrupted = corrupter.corrupt(img)
+<<<<<<< HEAD
+=======
+            goal = self.normalise_image(goal)
+            corrupted = self.normalise_image(corrupted)
+>>>>>>> 2b45d66530d16bf4b20d10d5799147952f837624
             goal_batch.append(goal)
             corrupted_batch.append(corrupted)
 

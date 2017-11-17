@@ -45,7 +45,7 @@ def pixelate_blur(magnitude, img):
     new_height = int(height/magnitude)
     new_width  = int(width/magnitude)
     new_img = cv2.resize(img, (new_width, new_height))
-    new_img = rnd_remove_pixel(new_img,0.1)
+    new_img = rnd_remove_pixel(new_img, 0.1)
 
     pixeled_img = cv2.resize(new_img, (width, height),
                              interpolation = cv2.INTER_NEAREST)
