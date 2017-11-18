@@ -33,7 +33,7 @@ def apply_perspective(pov, val, img):
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
                               borderMode=cv2.BORDER_CONSTANT,
-                              borderValue=[0, val, 0])
+                              borderValue=[val, val, val])
 
     return img
 
@@ -51,28 +51,24 @@ def reduce_size(magnitude, val, img):
     img = cv2.resize(img, (new_width, new_height))
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
-                                 cv2.BORDER_CONSTANT,value=[0, val, 0])
+                                 cv2.BORDER_CONSTANT,value=[val, val, val])
 
     return new_img
 
-
-def pad_with_val(max_size, val, old_im):
-    old_height, old_width, _ = old_im.shape
-
-    new_size_w = int((max_size[0] - old_width) / 2)
-    new_size_h = int((max_size[1] - old_height) / 2)
-
-    new_img = Image.new("RGB", max_size, "rgb(0, " + str(val) + ", 0)")
-    new_img.paste(Image.fromarray(old_im), (new_size_w, new_size_h))
-
-    return new_img
 
 def pad_with_val_and_scale(max_size, val, img):
     img_height, img_width, _ = img.shape
     scale = min(max_size[1] / img_height, max_size[0] / img_width)
-    new_img = cv2.resize(img, (int(scale * img_width), int(scale * img_height)))
-    new_img = pad_with_val(max_size, val, new_img)
-    return np.array(new_img)
+    img = cv2.resize(img, (int(scale * img_width), int(scale * img_height)))
+
+    h_border = (max_size[0] - img_width) / 2
+    v_border = (max_size[1] - img_height) / 2
+
+    new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
+                                      math.ceil(h_border), math.floor(h_border),
+                                 cv2.BORDER_CONSTANT,value=[val, val, val])
+
+    return new_img
 
 # Apply rotation.
 def reshape(magnitude, pov, width, height, img):

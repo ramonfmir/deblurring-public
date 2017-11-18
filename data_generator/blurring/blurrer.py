@@ -45,17 +45,17 @@ def pixelate_blur(magnitude, img):
     new_height = int(height/magnitude)
     new_width  = int(width/magnitude)
     new_img = cv2.resize(img, (new_width, new_height))
-    new_img = rnd_remove_pixel(new_img, 0.1)
+    new_img = rnd_remove_pixel(new_img, rand.uniform(0.1, 0.5))
 
-    pixeled_img = cv2.resize(new_img, (width, height),
-                             interpolation = cv2.INTER_NEAREST)
+    pixeled_img = cv2.resize(new_img, (width, height))
     return pixeled_img
 
 def rnd_remove_pixel(img, p):
     img = np.asarray(img)
     # random boolean mask for which values will be changed
     mask_size = np.array([img.shape[0], img.shape[1]])
-    mask = np.random.randint(0,2,size=mask_size).astype(np.bool)
+    mask = np.random.uniform(0, 1, size=mask_size)
+    mask = np.where(mask < p, 1, 0)
 
     # img after guassain blur, the same shape of your data
     r = gaussian_blur(5,3,img)
@@ -74,12 +74,18 @@ def motion_blur(size, theta, img):
     kernel = np.zeros([size, size])
     # find point spread function depth
     size = float(size)
-    depth = size/8
-    kernel[int(np.floor(size/2 - depth)):int(np.floor(size/2 + depth))+1][0:int(size)] = 1
+    depth = size / 8
+
+    bottom = int(size / 2 - depth)
+    top = int(size / 2 + depth) + 1
+    kernel[bottom:top][0:int(size)] = 1
+
     # Then rotate to specified angle
     kernel = sc.imrotate(kernel,theta)
+
     kernel = kernel / np.sum(kernel)
     img =  cv2.filter2D(img, -1, kernel)
+
     return img
 
 def point_spread_matrix(size, r,f):

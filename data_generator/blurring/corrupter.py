@@ -7,10 +7,10 @@ import cv2
 import numpy as np
 import random as rand
 
-width = 256
-height = 80
+width = 270
+height = 90
 
-def blur_type_1(img):
+def blur_main(img):
     gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 17))
     gaussian_sd = rand.randint(1, 6)
     motion_blur_kernel_size = kernel_size_corrector(rand.randint(5, 21))
@@ -18,7 +18,8 @@ def blur_type_1(img):
     perspective_pov = rand.uniform(-0.4, 0.4)
     resize_factor = rand.uniform(0.8, 1.00)
     contrast_level = rand.randint(1, 30)
-    pixelation_magnitude = rand.randint(1, 3)
+    pixelation_magnitude = rand.randint(2, 5)
+    brightness_factor = rand.randint(0, 15)
 
     img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
 
@@ -27,73 +28,100 @@ def blur_type_1(img):
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
     img = ct.increase_contrast(img, contrast_level)
     img = bl.pixelate_blur(pixelation_magnitude, img)
-    img = bc.change_brightness(rand.randint(0, 15), img)
+    img = bc.change_brightness(brightness_factor, img)
 
     return original, img
 
-# Just resizes + brightness
-def blur_type_2(img):
-    perspective_pov = rand.uniform(-0.5, 0.5)
-    resize_factor = rand.uniform(0.8, 1.00)
+# Brightness
+def blur_brightness(img):
+    perspective_pov = rand.uniform(-0.4, 0.4)
+    resize_factor = rand.uniform(0.7, 1.00)
     gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 21))
     gaussian_sd = rand.randint(3, 9)
-
-    img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
-
-    # Rotate and corrupt the corrupted.
-    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
-    img = bc.change_brightness(rand.randint(50, 150), img)
-
-    return original, img
-
-# Just resizes + gaussian + pizelation
-def blur_type_3(img):
-    perspective_pov = rand.uniform(-0.5, 0.5)
-    resize_factor = rand.uniform(0.8, 1.00)
-    gaussian_kernel_size = kernel_size_corrector(rand.randint(9, 23))
-    gaussian_sd = rand.randint(4, 7)
-    pixelation_magnitude = rand.randint(2, 5)
-
-    img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
-
-    # Rotate and corrupt the corrupted.
-    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
-    img = bl.pixelate_blur(pixelation_magnitude, img)
-
-    return original, img
-
-# resize + extreme vertical motion
-def blur_type_4(img):
-    perspective_pov = rand.uniform(-0.5, 0.5)
-    resize_factor = rand.uniform(0.8, 1.00)
-    gaussian_kernel_size = kernel_size_corrector(rand.randint(4, 9))
-    gaussian_sd = rand.randint(1, 5)
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(13, 23))
-    motion_blur_angle = rand.uniform(50, 130) * (-1 if rand.randint(0, 1) == 0 else 1)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(3, 5))
+    motion_blur_angle = rand.uniform(0, 360)
 
     img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
 
     # Rotate and corrupt the corrupted.
     img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+    img = bc.change_brightness(rand.randint(50, 100), img)
 
     return original, img
 
-# Nothing
-def blur_type_5(img):
-    perspective_pov = rand.uniform(-0.5, 0.5)
-    resize_factor = rand.uniform(0.8, 1.00)
+# Pixelation
+def blur_pixelation(img):
+    perspective_pov = rand.uniform(-0.4, 0.4)
+    resize_factor = rand.uniform(0.7, 1.00)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(9, 23))
+    gaussian_sd = rand.randint(4, 7)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(3, 5))
+    motion_blur_angle = rand.uniform(0, 360)
+    pixelation_magnitude = rand.randint(4, 7)
 
     img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
 
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
+    img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+    img = bl.pixelate_blur(pixelation_magnitude, img)
+
     return original, img
 
-blurs = [blur_type_1, blur_type_2, blur_type_3, blur_type_4, blur_type_5]
+# Extreme vertical motion
+def blur_vertical(img):
+    perspective_pov = rand.uniform(-0.4, 0.4)
+    resize_factor = rand.uniform(0.7, 1.00)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(4, 9))
+    gaussian_sd = rand.randint(1, 5)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(17, 29))
+    motion_blur_angle = rand.uniform(50, 130) * (-1 if rand.randint(0, 1) == 0 else 1)
+
+    img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
+
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
+    img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+
+    return original, img
+
+# Very mild blur
+def blur_mild(img):
+    perspective_pov = rand.uniform(-0.4, 0.4)
+    resize_factor = rand.uniform(0.7, 1.00)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 5))
+    gaussian_sd = rand.randint(1, 2)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(3, 5))
+    motion_blur_angle = rand.uniform(0, 360)
+    brightness_factor = rand.randint(0, 5)
+
+    img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
+
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
+    img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+    img = bc.change_brightness(brightness_factor, img)
+
+    return original, img
+
+blurs = [blur_main, blur_brightness, blur_pixelation, blur_vertical, blur_mild]
+blur_b_freq = 3
+blur_p_freq = 2
+blur_v_freq = 5
+blur_m_freq = 2
 
 def corrupt(img):
-    random_blur = 0 if rand.randint(1, 100) < 82 else rand.randint(1, 4)
+    blur_selector = 0
 
-    return blurs[random_blur](img)
+    random = rand.randint(1, 100)
+    if random <= blur_b_freq:
+        blur_selector = 1 # blur_brightness
+    elif random <= blur_b_freq + blur_p_freq:
+        blur_selector = 2 # blur_pixelation
+    elif random <= blur_b_freq + blur_p_freq + blur_v_freq:
+        blur_selector = 3 # blur_vertical
+    elif random <= blur_b_freq + blur_p_freq + blur_v_freq + blur_m_freq:
+        blur_selector = 4 # blur_mild
+
+    return blurs[blur_selector](img)
 
 def nice_goal_image(img):
     # convert to np.float32
@@ -125,7 +153,7 @@ if __name__ == "__main__":
     for i in range(100):
         img = cv2.imread("data/40nice/0a0a7765-f5cc-4da9-b55f-d344e3fb2671-0.jpg")
 
-        cv2.imshow('Bad', corrupt(img)[1])
+        cv2.imshow('Bad', blur_mild(img)[1])
         cv2.waitKey(0)
 
     cv2.destroyAllWindows()
