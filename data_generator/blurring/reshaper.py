@@ -7,8 +7,20 @@ from numpy.random import randint
 
 # Applies a 'perspective' transformation. The pov is a number between -1 and 1.
 # It will affect the angle of the perspective.
-def apply_perspective(pov, img):
+def apply_perspective(pov, img, seed):
+    np.random.seed(seed)
     height, width, _ = img.shape
+
+    fill = border_colour()
+    #horizontal
+    horiz = randint(2,6)
+    np.place(img[:,0:horiz], img[:,0:horiz] < 20, fill)
+    np.place(img[:,-horiz:], img[:,-horiz:] < 20, fill)
+
+    #vertical
+    vert = randint(2,13)
+    np.place(img[0:vert,:], img[0:vert,:] < 20, fill)
+    np.place(img[-vert:,:], img[-vert:,:] < 20, fill)
 
     angle = pov * math.atan(height / width) / 2
     top_left, bottom_left, top_right, bottom_right = (0,) * 4
@@ -27,10 +39,11 @@ def apply_perspective(pov, img):
                         [width, top_right],
                         [width, height - bottom_right]])
 
+    border_val = border_colour()
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
                               borderMode=cv2.BORDER_CONSTANT,
-                              borderValue=[0, 255, 0])
+                              borderValue=border_val)
 
     return img
 
@@ -38,7 +51,8 @@ def apply_perspective(pov, img):
 # Reduce the size of the image. The magnitude is between 0 and 1. 0 is
 # equivalent to reducing the size by a half and 1 is equivalent to keeping the
 # image as it is.
-def reduce_size(magnitude, img):
+def reduce_size(magnitude, img, seed):
+    np.random.seed(seed)
     scale = 0.5 + (magnitude / 2)
     height, width, _ = img.shape
     new_height, new_width = int(scale * height), int(scale * width)
@@ -46,11 +60,26 @@ def reduce_size(magnitude, img):
     h_border = (width - new_width) / 2
 
     img = cv2.resize(img, (new_width, new_height))
+
+    border_val = border_colour()
+
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
-                                 cv2.BORDER_CONSTANT,value=[0, 255, 0])
+                                       cv2.BORDER_CONSTANT, value=border_val)
 
     return new_img
+
+def border_colour():
+    p = np.random.random()
+    if p < 0.33:
+        #dark
+        return randint(0,50,(3)).tolist()
+    elif p < 0.66:
+        #medium
+        return randint(100,140,(3)).tolist()
+    else:
+        #bright
+        return randint(220,255,(3)).tolist()
 
 # Fill black borders (created by reduce_size, apply_perspective) with random noise
 def random_border(img):
@@ -62,6 +91,9 @@ def random_border(img):
                 img[i, j] = randint(0,255,(3)).tolist()
 
     return img
+
+# Make vertical and horizontal colour different
+# Make it a bit bigger than original
 
 # Apply rotation.
 def rotate_image(angle, img):
@@ -76,4 +108,3 @@ if __name__ == "__main__":
     cv2.imshow('Perspective', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
