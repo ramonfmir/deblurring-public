@@ -28,7 +28,7 @@ def apply_perspective(pov, img):
                         [width, top_right],
                         [width, height - bottom_right]])
 
-    val = int(rand.beta(0.5, 0.5) * 255)
+    val = int(np.random.beta(0.5, 0.5) * 255)
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
                               borderMode=cv2.BORDER_CONSTANT,
@@ -47,7 +47,7 @@ def reduce_size(magnitude, img):
     v_border = (height - new_height) / 2
     h_border = (width - new_width) / 2
 
-    val = int(rand.beta(0.5, 0.5) * 255)
+    val = int(np.random.beta(0.5, 0.5) * 255)
     img = cv2.resize(img, (new_width, new_height))
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),

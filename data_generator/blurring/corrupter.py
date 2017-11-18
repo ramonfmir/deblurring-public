@@ -13,13 +13,13 @@ def blur_type_1(img):
     gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 23))
     gaussian_sd = rand.randint(1, 7)
     motion_blur_kernel_size = kernel_size_corrector(rand.randint(5, 23))
-    motion_blur_angle = rand.uniform(0, 360)
+    motion_blur_angle = rand.uniform(0, 2 * np.pi)
     pixelation_magnitude = rand.randint(2, 4)
     perspective_pov = rand.uniform(-0.4, 0.4)
     resize_factor = rand.uniform(0.8, 1.00)
     contrast_level = rand.randint(1, 30)
-    pixelation_magnitude = rand.randint(1, 4)
-    img = bc.change_brightness(rand.randint(0, 5), img)
+    pixelation_magnitude = rand.randint(1, 3)
+    img = bc.change_brightness(rand.randint(0, 15), img)
 
     # Just rotate the original.
     original = deepcopy(img)
@@ -40,6 +40,8 @@ def blur_type_1(img):
 def blur_type_2(img):
     perspective_pov = rand.uniform(-0.5, 0.5)
     resize_factor = rand.uniform(0.8, 1.00)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(6, 21))
+    gaussian_sd = rand.randint(3, 9)
 
     # Just rotate the original.
     original = deepcopy(img)
@@ -49,14 +51,58 @@ def blur_type_2(img):
     # Rotate and corrupt the corrupted.
     img = rs.apply_perspective(perspective_pov, img)
     img = rs.reduce_size(resize_factor, img)
-    img = bc.change_brightness(rand.randint(0, 60), img)
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
+    img = bc.change_brightness(rand.randint(20, 100), img)
 
     return original, img
 
-blurs = [blur_type_1, blur_type_2]
+# Just resizes + gaussian + pizelation
+def blur_type_3(img):
+    perspective_pov = rand.uniform(-0.5, 0.5)
+    resize_factor = rand.uniform(0.8, 1.00)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(11, 23))
+    gaussian_sd = rand.randint(4, 7)
+    pixelation_magnitude = rand.randint(2, 5)
+
+    # Just rotate the original.
+    original = deepcopy(img)
+    original = rs.apply_perspective(perspective_pov, original)
+    original = rs.reduce_size(resize_factor, original)
+
+    # Rotate and corrupt the corrupted.
+    img = rs.apply_perspective(perspective_pov, img)
+    img = rs.reduce_size(resize_factor, img)
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
+    img = bl.pixelate_blur(pixelation_magnitude, img)
+
+    return original, img
+
+# resize + extreme vertical motion
+def blur_type_4(img):
+    perspective_pov = rand.uniform(-0.5, 0.5)
+    resize_factor = rand.uniform(0.8, 1.00)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(4, 9))
+    gaussian_sd = rand.randint(1, 5)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(13, 23))
+    motion_blur_angle = rand.uniform(np.pi / 4, 3 * np.pi / 4) * (-1 if rand.randint(0, 1) == 0 else 1)
+
+    # Just rotate the original.
+    original = deepcopy(img)
+    original = rs.apply_perspective(perspective_pov, original)
+    original = rs.reduce_size(resize_factor, original)
+
+    # Rotate and corrupt the corrupted.
+    img = rs.apply_perspective(perspective_pov, img)
+    img = rs.reduce_size(resize_factor, img)
+    img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
+    img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
+
+    return original, img
+
+blurs = [blur_type_1, blur_type_2, blur_type_3, blur_type_4]
 
 def corrupt(img):
-    random_blur = 0 if rand.randint(1, 100) < 80 else 1
+    random_blur = 0 if rand.randint(1, 100) < 85 else rand.randint(1, 3)
 
     return blurs[random_blur](img)
 
