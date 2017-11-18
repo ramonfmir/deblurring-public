@@ -55,7 +55,6 @@ def permute(img_src):
     char_size = int(width*char_ratio)
     dot_size = int(width*dot_ratio)
 
-
     permed_image = deepcopy(img)
 
     for i in range(50):
