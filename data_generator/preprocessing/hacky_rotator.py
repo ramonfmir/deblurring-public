@@ -85,7 +85,7 @@ def hack_the_hack(img_dirty, img_hack):
     img_hack = reduce_size(magnitude, val, img_hack)
 
     pov = float(input("Input Perspective Transformation [-1, 1] "))
-    apply_perspective(pov, val, img_hack)
+    img_hack = apply_perspective(pov, val, img_hack)
 
     angle = float(input("Input Rotation Angle [0, 180] "))
     img_hack = sc.imrotate(img_hack, angle)
