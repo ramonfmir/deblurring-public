@@ -72,10 +72,10 @@ def blur_pixelation(img):
 def blur_vertical(img):
     perspective_pov = rand.uniform(-0.4, 0.4)
     resize_factor = rand.uniform(0.7, 1.00)
-    gaussian_kernel_size = kernel_size_corrector(rand.randint(4, 9))
-    gaussian_sd = rand.randint(1, 5)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 9))
+    gaussian_sd = rand.randint(1, 4)
     motion_blur_kernel_size = kernel_size_corrector(rand.randint(17, 29))
-    motion_blur_angle = rand.uniform(50, 130) * (-1 if rand.randint(0, 1) == 0 else 1)
+    motion_blur_angle = np.random.normal(90, 10) * (-1 if rand.randint(0, 1) == 0 else 1)
 
     img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
 
@@ -123,22 +123,6 @@ def corrupt(img):
 
     return blurs[blur_selector](img)
 
-def nice_goal_image(img):
-    # convert to np.float32
-    Z = img.reshape((-1,3))
-    Z = Z.astype(np.float32)
-
-    # define criteria, number of clusters(K) and apply kmeans()
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-    K = 10
-    ret, label, center = cv2.kmeans(Z, K, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-
-    res = center[label.flatten()]
-    res2 = res.reshape((img.shape))
-
-    return res2
-
-
 def kernel_size_corrector(kernel_size):
     kernel_size = int(kernel_size)
     return kernel_size + 1 if kernel_size % 2 == 0 else kernel_size
@@ -153,7 +137,7 @@ if __name__ == "__main__":
     for i in range(100):
         img = cv2.imread("data/40nice/0a0a7765-f5cc-4da9-b55f-d344e3fb2671-0.jpg")
 
-        cv2.imshow('Bad', blur_mild(img)[1])
+        cv2.imshow('Bad', blur_vertical(img)[1])
         cv2.waitKey(0)
 
     cv2.destroyAllWindows()

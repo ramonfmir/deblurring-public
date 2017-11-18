@@ -23,8 +23,8 @@ dataset_path = 'data/3440awesome_same_dims_scaled'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
-image_width = 256
-image_height = 80
+image_width = 270
+image_height = 90
 batch_size = 20
 
 # Hyperparameters
