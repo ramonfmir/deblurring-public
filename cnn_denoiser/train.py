@@ -25,14 +25,14 @@ logs_directory = './tensorboard_logs/'
 # Parameters
 image_width = 270
 image_height = 90
-batch_size = 40
+batch_size = 64
 
 # Hyperparameters
 # alpha = 0.001
 global_step = tf.Variable(0, trainable=False)
-starter_learning_rate = 1e-3
+starter_learning_rate = 0.001
 N_steps_before_decay = 1000
-decay_rate = 0.99
+decay_rate = 0.98125
 alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            N_steps_before_decay, decay_rate, staircase=True)
 
