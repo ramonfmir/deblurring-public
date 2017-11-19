@@ -2,9 +2,6 @@
 data/4000unlabeledLP_same_dims_scaled
 data/100labeledLPforvalidation_same_dims_scaled/
 
-# Trained models
-trained_models
-
 # Pretraining data
 pretrain
 
