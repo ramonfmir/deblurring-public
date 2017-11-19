@@ -3,7 +3,7 @@ from PIL import Image
 
 # Path to the original datasets
 dataset_directory_path = "data" #os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-dataset_path = dataset_directory_path + "/100labeledLPforvalidation"
+dataset_path = dataset_directory_path + "/yellow_75verynice"
 # dataset_path = dataset_directory_path + "/4000unlabeledLP"
 print(dataset_directory_path, dataset_path)
 
@@ -46,6 +46,6 @@ if __name__ == "__main__":
     print(new_path)
     if not os.path.exists(new_path):
         os.makedirs(new_path)
-        process_dataset(new_path, dataset_img_ext, simple_resize)#pad_with_black_and_scale)
+        process_dataset(new_path, dataset_img_ext, simple_resize)
     else:
         print('Dataset directory already exists, no new dataset generated.')
