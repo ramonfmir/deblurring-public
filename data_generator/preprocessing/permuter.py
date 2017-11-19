@@ -118,13 +118,9 @@ def permute(img_src):
     # return permed_image
 
 if __name__ == '__main__':
-    the_biggest_of_hacks()
+    #the_biggest_of_hacks()
 
-    #dataset_path = sys.argv[1]
-    #for file_path in os.listdir(dataset_path):
-    #    file_path = dataset_path + "/" + file_path
-        # for i in range(7):
-        #     char = get_n_char(file_path, i)
-        #     cv2.imshow('faaa', char)
-        #     cv2.waitKey(0)
-    #    permute(file_path)
+    dataset_path = sys.argv[1]
+    for file_path in os.listdir(dataset_path):
+        file_path = dataset_path + "/" + file_path
+        permute(file_path)

@@ -37,11 +37,15 @@ def pad_with_black_and_scale(im):
     new_im = pad_with_black(new_im)
     return new_im
 
+def simple_resize(img):
+    img = img.resize(max_size, Image.ANTIALIAS)
+    return img
+
 if __name__ == "__main__":
     new_path = dataset_path + "_same_dims_scaled/"
     print(new_path)
     if not os.path.exists(new_path):
         os.makedirs(new_path)
-        process_dataset(new_path, dataset_img_ext, pad_with_black_and_scale)
+        process_dataset(new_path, dataset_img_ext, simple_resize)#pad_with_black_and_scale)
     else:
         print('Dataset directory already exists, no new dataset generated.')
