@@ -21,14 +21,17 @@ def apply_perspective(pov, val, img):
     else:
         top_right, bottom_left = (width * math.tan(-angle),) * 2
 
+    margin_left = (top_left + bottom_left)
+    margin_right = (top_right + bottom_right) 
+
     pts_i = np.float32([[0, 0],
                         [0, height],
                         [width, 0],
                         [width, height]])
-    pts_o = np.float32([[0, top_left],
-                        [0, height - bottom_left],
-                        [width, top_right],
-                        [width, height - bottom_right]])
+    pts_o = np.float32([[margin_left, top_left],
+                        [margin_left, height - bottom_left],
+                        [width - margin_right, top_right],
+                        [width - margin_right, height - bottom_right]])
 
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
