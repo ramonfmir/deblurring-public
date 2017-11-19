@@ -32,7 +32,7 @@ def apply_perspective(pov, val, img):
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
                               borderMode=cv2.BORDER_CONSTANT,
-                              borderValue=[0, val, 0])
+                              borderValue=[val, val, val])
 
     return img
 
@@ -76,18 +76,14 @@ def pad_with_val_and_scale(max_size, val, img):
 
 
 def hack_the_hack(img_dirty, img_hack):
-    cv2.imshow("Dirty Image", img_dirty)
-    cv2.imshow("Dirty HACK Image", img_hack)
-    cv2.waitKey(0)
+    magnitude = float(input("Resize Factor [0, 1] \n"))
 
-    magnitude = float(input("Resize Factor [0, 1] "))
-    val = 0 if str(input("Input Border Colour {B, W} ")) == "B" else 255
+    val = 0 if str(input("Input Border Colour {B, W} \n")) == "B" else 255
     img_hack = reduce_size(magnitude, val, img_hack)
-
-    pov = float(input("Input Perspective Transformation [-1, 1] "))
+    pov = float(input("Input Perspective Transformation [-1, 1] \n"))
     img_hack = apply_perspective(pov, val, img_hack)
 
-    angle = float(input("Input Rotation Angle [0, 180] "))
+    angle = float(input("Input Rotation Angle [0, 180] \n"))
     img_hack = sc.imrotate(img_hack, angle)
 
     return img_hack
@@ -100,13 +96,32 @@ if __name__ == "__main__":
 
     for filename in os.listdir(directory_dirty):
         img_dirty_path = directory_dirty + "/" + str(filename)
-        img_hack_path = directory_hack + "/" + str(filename)
+        img_hack_path = directory_hack + "/" + "generated" + str(filename)
         file, ext = os.path.splitext(img_hack_path)
 
         img_dirty = cv2.imread(img_dirty_path)
-        img_hack  = cv2.imread(img_hack_path)
+        if(os.path.exists(img_hack_path)):
+            img_hack  = cv2.imread(img_hack_path)
+        else:
+            continue
 
-        new_img = hack_the_hack(img_dirty, img_hack)
+        cv2.imshow("Dirty Image", img_dirty)
+        cv2.imshow("Dirty HACK Image", img_hack)
+        cv2.waitKey(0)
+
+        if input("Skip [Y/N]") == "Y":
+            continue
+
+        redo = True
+        while(redo) :
+            new_img = hack_the_hack(img_dirty, img_hack)
+            cv2.destroyAllWindows()
+            cv2.imshow("Dirty Image", img_dirty)
+            cv2.imshow("New Image", new_img)
+            cv2.waitKey(0)
+            redo = True if input("Redo [Y/N] \n") == "Y" else False
+
+        cv2.destroyAllWindows()
         new_img_path = directory_out + "/" + str(filename)
         cv2.imwrite(new_img_path, new_img)
 
