@@ -24,19 +24,19 @@ def corrupt(img):
     seed = np.random.randint(99999)
     # Just rotate the original.
     original = deepcopy(img)
-    original = rs.apply_perspective(perspective_pov, original, seed)
-    original = rs.reduce_size(resize_factor, original, seed)
+    #original = rs.apply_perspective(perspective_pov, original, seed)
+    #original = rs.reduce_size(resize_factor, original, seed)
     #original = rs.random_border(original)
 
     # Rotate and corrupt the corrupted.
     #img = bl.gaussian_blur(gaussian_kernel_size, gaussian_sd, img)
     #img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
-    img = rs.apply_perspective(perspective_pov, img, seed)
-    img = rs.reduce_size(resize_factor, img, seed)
+    #img = rs.apply_perspective(perspective_pov, img, seed)
+    #img = rs.reduce_size(resize_factor, img, seed)
     #img = rs.random_border(img)
     #img = rs.random_gradient(img)
     #img = ct.increase_contrast(img, contrast_level)
-    #img = bl.pixelate_blur(pixelation_magnitude, img)
+    img = bl.pixelate_blur(pixelation_magnitude, img)
 
     return original, img
 
@@ -61,12 +61,28 @@ def kernel_size_corrector(kernel_size):
     return kernel_size + 1 if kernel_size % 2 == 0 else kernel_size
 
 if __name__ == "__main__":
-    image_data = input_data.load_images("data/40nice", 270, 90)
-    input_, blurred = image_data.next_batch(1)
+    #the100 = input_data.load_images("data/100labeledLPforvalidation", 270, 90)
+    image_data = input_data.load_images("data/40nicer", 270, 90)
+    #input_, blurred = image_data.next_batch(50)
     # img = cv2.imread("data/40nice/0a0a7765-f5cc-4da9-b55f-d344e3fb2671-0.jpg")
     # img = corrupt(input_[0])
+    #for i in range(10):
+    #    cv2.imshow('Perspective', the100.imgs[i])
+#        cv2.imshow('Ours', blurred[i])
 
-    cv2.imshow('Perspective', blurred[0])
-    cv2.imshow('Perspective2', input_[0])
+    img = image_data.imgs[0]
+    #mask = cv2.inRange(img, lower, upper)
+
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # define range of blue color in HSV
+    lower_blue = np.array([70,30,30])
+    upper_blue = np.array([180,255,255])
+    # Threshold the HSV image to get only blue colors
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+
+    img[np.where((np.logical_and(hsv >= lower_blue, hsv <= upper_blue)).all(axis=2))] = [0,0,0]
+
+    cv2.imshow('a', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
