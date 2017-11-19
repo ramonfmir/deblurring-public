@@ -50,7 +50,7 @@ def reduce_size(magnitude, val, img):
     new_height, new_width = int(scale * height), int(scale * width)
     v_border = (height - new_height) / 2
     h_border = (width - new_width) / 2
-    
+
     img = cv2.resize(img, (new_width, new_height))
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
@@ -62,11 +62,10 @@ def reduce_size(magnitude, val, img):
 def pad_with_val_and_scale(max_size, val, img):
     img_height, img_width, _ = img.shape
     scale = min(max_size[1] / img_height, max_size[0] / img_width)
-    new_width, new_height = int(scale * img_width), int(scale * img_height)
-    img = cv2.resize(img, (new_width, new_height))
+    img = cv2.resize(img, (int(scale * img_width), int(scale * img_height)))
 
-    h_border = (max_size[0] - new_width) / 2
-    v_border = (max_size[1] - new_height) / 2
+    h_border = (max_size[0] - img_width) / 2
+    v_border = (max_size[1] - img_height) / 2
 
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
@@ -85,10 +84,10 @@ def reshape(magnitude, pov, width, height, img):
 
 
 if __name__ == "__main__":
-    img = cv2.imread("../tests/lp.jpg")
+    img = cv2.imread("../../data/40nicer/17Shanghai.jpg")
     # random_border(img)
 
-    img = reshape(0.7, 0.5, 256, 80, img)
+    img = reshape(0.7, 0.5, 270, 90, img)
     cv2.imshow('Perspective', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

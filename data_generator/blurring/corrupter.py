@@ -11,15 +11,15 @@ width = 270
 height = 90
 
 def blur_main(img):
-    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 17))
-    gaussian_sd = rand.randint(1, 6)
-    motion_blur_kernel_size = kernel_size_corrector(rand.randint(5, 21))
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(3, 7))
+    gaussian_sd = rand.randint(1, 5)
+    motion_blur_kernel_size = kernel_size_corrector(rand.randint(11, 25))
     motion_blur_angle = rand.uniform(0, 360)
-    perspective_pov = rand.uniform(-0.4, 0.4)
+    perspective_pov = 0.5 - np.random.beta(0.5, 0.5)
     resize_factor = rand.uniform(0.8, 1.00)
-    contrast_level = rand.randint(1, 30)
-    pixelation_magnitude = rand.randint(4, 8)
-    brightness_factor = rand.randint(0, 15)
+    contrast_level = rand.randint(1, 20)
+    pixelation_magnitude = rand.randint(4, 7)
+    brightness_factor = rand.randint(0, 13)
 
     img, original = rs.reshape(resize_factor, perspective_pov, width, height, img)
 
@@ -54,8 +54,8 @@ def blur_brightness(img):
 def blur_pixelation(img):
     perspective_pov = rand.uniform(-0.4, 0.4)
     resize_factor = rand.uniform(0.7, 1.00)
-    gaussian_kernel_size = kernel_size_corrector(rand.randint(9, 14))
-    gaussian_sd = rand.randint(6, 8)
+    gaussian_kernel_size = kernel_size_corrector(rand.randint(9, 23))
+    gaussian_sd = rand.randint(4, 7)
     motion_blur_kernel_size = kernel_size_corrector(rand.randint(3, 5))
     motion_blur_angle = rand.uniform(0, 360)
     pixelation_magnitude = rand.randint(4, 7)
@@ -130,15 +130,14 @@ def kernel_size_corrector(kernel_size):
 if __name__ == "__main__":
     #image_data = input_data.load_images("data/40nice", 270, 90)
     #input_, blurred = image_data.next_batch(1)
-    img = cv2.imread("data/40nice/0a0a7765-f5cc-4da9-b55f-d344e3fb2671-0.jpg")
+    img = cv2.imread("data/40nicer_same_dims_scaled/17Shanghai.jpg")
     cv2.imshow('Good', img)
     cv2.waitKey(0)
 
     for i in range(100):
-        img = cv2.imread("data/40nice/0a0a7765-f5cc-4da9-b55f-d344e3fb2671-0.jpg")
+        img = cv2.imread("data/40nicer_same_dims_scaled/17Shanghai.jpg")
 
         cv2.imshow('Bad', blur_main(img)[1])
         cv2.waitKey(0)
 
     cv2.destroyAllWindows()
-
