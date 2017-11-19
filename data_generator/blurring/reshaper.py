@@ -8,6 +8,9 @@ from numpy.random import randint
 from PIL import Image
 from copy import deepcopy
 
+width = 270
+height = 90
+
 # Applies a 'perspective' transformation. The pov is a number between -1 and 1.
 # It will affect the angle of the perspective.
 def apply_perspective(pov, val, img):
@@ -21,8 +24,8 @@ def apply_perspective(pov, val, img):
     else:
         top_right, bottom_left = (width * math.tan(-angle),) * 2
 
-    margin_left = (top_left + bottom_left)
-    margin_right = (top_right + bottom_right) 
+    margin_left = (top_left + bottom_left) / 3
+    margin_right = (top_right + bottom_right) / 3
 
     pts_i = np.float32([[0, 0],
                         [0, height],
@@ -33,7 +36,6 @@ def apply_perspective(pov, val, img):
                         [width - margin_right, top_right],
                         [width - margin_right, height - bottom_right]])
 
-    border_val = border_colour()
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
                               borderMode=cv2.BORDER_CONSTANT,
@@ -53,8 +55,6 @@ def reduce_size(magnitude, val, img):
     h_border = (width - new_width) / 2
     
     img = cv2.resize(img, (new_width, new_height))
-
-    border_val = border_colour()
 
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
