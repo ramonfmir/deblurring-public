@@ -23,16 +23,20 @@ dataset_path = 'data/3440awesome_same_dims_scaled'
 logs_directory = './tensorboard_logs/'
 
 # Parameters
-image_width = 270
-image_height = 90
-batch_size = 20
+image_width = 256
+image_height = 80
+batch_size = 40
 
 # Hyperparameters
 # alpha = 0.001
 global_step = tf.Variable(0, trainable=False)
 starter_learning_rate = 1e-3
 N_steps_before_decay = 1000
+<<<<<<< HEAD
 decay_rate = 0.9525
+=======
+decay_rate = 0.975
+>>>>>>> 73cb98e182822f38ef57e08d84483f824afe2905
 alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
                                            N_steps_before_decay, decay_rate, staircase=True)
 

@@ -48,6 +48,7 @@ def pixelate_blur(magnitude, img):
     #new_img = rnd_remove_pixel(new_img, rand.uniform(0.05, 0.2))
 
     pixeled_img = cv2.resize(new_img, (width, height))
+    
     return pixeled_img
 
 def rnd_remove_pixel(img, p):

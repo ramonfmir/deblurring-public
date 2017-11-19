@@ -33,6 +33,7 @@ def apply_perspective(pov, val, img):
                         [width - margin_right, top_right],
                         [width - margin_right, height - bottom_right]])
 
+    border_val = border_colour()
     M = cv2.getPerspectiveTransform(pts_i, pts_o)
     img = cv2.warpPerspective(img, M, (width, height),
                               borderMode=cv2.BORDER_CONSTANT,
@@ -52,6 +53,9 @@ def reduce_size(magnitude, val, img):
     h_border = (width - new_width) / 2
     
     img = cv2.resize(img, (new_width, new_height))
+
+    border_val = border_colour()
+
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),
                                  cv2.BORDER_CONSTANT,value=[val, val, val])
@@ -73,6 +77,9 @@ def pad_with_val_and_scale(max_size, val, img):
                                  cv2.BORDER_CONSTANT,value=[val, val, val])
 
     return new_img
+
+# Make vertical and horizontal colour different
+# Make it a bit bigger than original
 
 # Apply rotation.
 def reshape(magnitude, pov, width, height, img):

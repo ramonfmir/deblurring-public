@@ -132,6 +132,7 @@ if __name__ == "__main__":
     #input_, blurred = image_data.next_batch(1)
     img = cv2.imread("data/40nicer_same_dims_scaled/17Shanghai.jpg")
     cv2.imshow('Good', img)
+
     cv2.waitKey(0)
 
     for i in range(100):
