@@ -59,10 +59,11 @@ def reduce_size(magnitude, val, img):
 def pad_with_val_and_scale(max_size, val, img):
     img_height, img_width, _ = img.shape
     scale = min(max_size[1] / img_height, max_size[0] / img_width)
-    img = cv2.resize(img, (int(scale * img_width), int(scale * img_height)))
+    new_width, new_height = int(scale * img_width), int(scale * img_height)
+    img = cv2.resize(img, (new_width, new_height))
 
-    h_border = (max_size[0] - img_width) / 2
-    v_border = (max_size[1] - img_height) / 2
+    h_border = (max_size[0] - new_width) / 2
+    v_border = (max_size[1] - new_height) / 2
 
     new_img = cv2.copyMakeBorder(img, math.ceil(v_border), math.floor(v_border),
                                       math.ceil(h_border), math.floor(h_border),

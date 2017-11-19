@@ -86,24 +86,24 @@ def autoencoder(original, inputs, training):
     dropout = training_dropout if training else 0.0
 
     # Encoder
-    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 288, [5, 5], (3, 3), 'conv1', dropout=0.0)
+    net, step, loss = pre_train_conv_layer(inputs, tf.layers.conv2d, 512, [5, 5], (3, 3), 'conv1', dropout=0.0)
     print(net.shape)
     pretrain(pretrain_steps_first_layer, step, loss, original, 'conv1', training)
 
-    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 96, [5, 5], (3, 3), 'conv2', dropout=dropout)
+    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 256, [5, 5], (3, 3), 'conv2', dropout=dropout)
     print(net.shape)
     pretrain(pretrain_steps, step, loss, original, 'conv2', training)
 
-    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 32, [5, 5], (1, 1), 'conv3', dropout=dropout)
+    net, step, loss = pre_train_conv_layer(net, tf.layers.conv2d, 128, [5, 5], (1, 1), 'conv3', dropout=dropout)
     print(net.shape)
     pretrain(pretrain_steps, step, loss, original, 'conv3', training)
 
     # Decoder
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 32, [5, 5], (1, 1), 'deconv1', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 128, [5, 5], (1, 1), 'deconv1', dropout=dropout)
     print(net.shape)
     pretrain(pretrain_steps, step, loss, original, 'deconv1', training)
 
-    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 96, [5, 5], (3, 3), 'deconv2', dropout=dropout)
+    net, step, loss  = pre_train_conv_layer(net, tf.layers.conv2d_transpose, 256, [5, 5], (3, 3), 'deconv2', dropout=dropout)
     print(net.shape)
     pretrain(pretrain_steps, step, loss, original, 'deconv2', training)
 
