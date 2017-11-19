@@ -9,7 +9,7 @@ print(dataset_directory_path, dataset_path)
 
 dataset_img_ext = "jpg"
 img_type = "JPEG"
-max_size = 256, 80
+max_size = 270, 90
 
 def process_dataset(new_dataset_path, dataset_img_ext, process):
     for file_path in os.listdir(dataset_path):
