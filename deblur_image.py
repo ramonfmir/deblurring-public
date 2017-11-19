@@ -5,7 +5,6 @@ import os
 from cnn_denoiser.model_definitions import autoencoder_model as model
 from cnn_denoiser.model_definitions.networks import moussaka as autoencoder_network
 
-from cnn_denoiser.input_data import resize_and_pad
 
 import cv2
 import numpy as np
@@ -18,7 +17,7 @@ from PIL import Image
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-images_path = 'data/100labeledLPforvalidation_same_dims_scaled'
+images_path = 'data/100labeledLPforvalidation'
 clean_images_path = 'data/100clean'
 
 # Parameters
@@ -42,8 +41,7 @@ def save_clean(imgs):
 
         for f in imgs:
             img = cv2.imread(f)
-            img = resize_and_pad(img, image_width, image_height)
-            #cv2.resize(img, (image_width, image_height), 0, 0, cv2.INTER_CUBIC)
+            img = cv2.resize(img, (image_width, image_height), 0, 0, cv2.INTER_CUBIC)
 
             img = [np.asarray(np.multiply(img.astype(np.float32), 1.0 / 255.0))]
 
