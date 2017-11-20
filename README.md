@@ -39,7 +39,7 @@ The image is then converted to grey scale. This has the advantages:
 
 ## Model Architecture ([Our model](https://github.com/qvks/deblurring/blob/ready_for_sumission/cnn_denoiser/model_definitions/networks/moussaka.py))
 (defined in cnn_denoiser/model_definitions/networks/moussaka.py)
-The model consists of three convolutional networks, and three transposed convolutional networks.
+The model consists of three convolutional networks, and three transposed convolutional networks. We called it `moussaka`, a traditional Greek dish that consists of several layers.
 Before each layer (except the first layer) we apply dropout with a rate of 0.5 to avoid overfitting. After each layer we apply ReLU.
 ### Encoding (Convolutional)
 The first three layers apply kernels to the image as it propagates. Typically, we have observed that the first layer identifies edges, and so on. At each layer, the image is padded out with black borders so that the resultant image would have the same dimensions if the kernel stride was 1.
@@ -53,6 +53,9 @@ Initially, we pretrain the model as a Deep Belief Network.
 We then train in constant size batches selected from the shuffled dataset. Once we have iterated over the dataset once, we reshuffle and start again.
 To each batch, and for each image in the batch, we derive the blurred image from the original image using our blur function. Thus, the cost of the network output is the mean square of the different between the output (deblurred) image and the original image.
 We use an Adam Optimiser to train the weights on the aforementioned cost with a learning rate that decays exponentially over time.
+
+To run the trianing script we run the following:
+`python3 cnn_denoiser/train.py --run restart --num_iter 99999 --model moussaka`
 
 ## Model Evaluation
 When training our model we used Tensorboard to evaluate its progress. Every 10 batches we save an image from just one channel of the propagation described above. We also record the average error of the batch and the current learning rate which are plotted as graphs.
