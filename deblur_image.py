@@ -17,7 +17,7 @@ from PIL import Image
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-images_path = 'data/100labeledLPforvalidation'
+images_path = 'data/100validation'
 clean_images_path = 'data/100clean'
 
 # Parameters
@@ -41,10 +41,9 @@ def save_clean(imgs):
 
         for f in imgs:
             img = cv2.imread(f)
-            img = cv2.resize(img, (image_width, image_height), 0, 0, cv2.INTER_CUBIC)
 
             img = [np.asarray(np.multiply(img.astype(np.float32), 1.0 / 255.0))]
-        
+
             clean = sess.run([network.deblurred], feed_dict={network.corrupted: img, network.original: img})[0]
             clean = clean[0, ..., 0]
 

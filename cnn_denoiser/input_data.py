@@ -25,7 +25,7 @@ def load_images(train_path, image_size_x,image_size_y):
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
-        image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
+        #image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
 
         images.append(image)
 
