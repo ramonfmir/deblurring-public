@@ -1,8 +1,6 @@
 # Deblurring
 
-[![Build Status](https://travis-ci.com/qvks/deblurring.svg?token=fTTycZszr1xwSx4deq7e&branch=master)](https://travis-ci.com/qvks/deblurring) [![codecov](https://codecov.io/gh/ramonfmir/deblurring/branch/master/graph/badge.svg?token=54QoaHZuqI)](https://codecov.io/gh/ramonfmir/deblurring)
-
-# Table of Contents
+## Table of Contents
 1. Run instructions (How to deblur images)
 2. Project Inspiration and Introduction
 3. Technologies
@@ -15,7 +13,7 @@
 To deblur a directory of images, first create a destination directory where you want the deblurred images to go. Then run:
 * `python3 deblur_images.py  /path/to/your/blurred/images  /path/to/destination`
 
-We have added the deblurred version of the images in `final_test` that you sent us in the directory `final_test_deblurred`. You can also see the results in the validation images in ``data/100clean`.
+We have added the deblurred version of the images in `final_test` that you sent us in the directory `final_test_deblurred`. You can also see the results in the validation images in `data/100clean`.
 
 # Project Inspiration and Introduction
 There are two main themes in this project:
