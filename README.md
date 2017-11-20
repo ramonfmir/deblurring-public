@@ -17,22 +17,10 @@ Members:
 * Rachel Mekhtieva Lee (@qvks)
 * Aristomenis Papadopoulos (@arisPapadop)
 
-## Prerequisites
+## Usage
 
-Follow these steps to make sure that you can run our code locally:
+To deblur images, run the following command:
 
-1. Clone this repository.
+`python3 deblur_images /path/to/corrupted /path/to/clean`
 
-2. Install Python 3.6 or later. Simply run `sudo apt-get install python3.6`.
-
-3. Upgrade `pip3` and install the rest of the requirements by typing `pip3 install -r requirements.txt`.
-
-
-## Running locally
-
-Not so exciting at the moment. You can do a few things though. An example would be running:
-
-* `python3 data/dataset_manipulation/generate_dataset_same_dimensions.py`
-* `python3 deblurrer/cnn_denoise_experiment/train.py --run restart`
-
-This should train our neural network.
+This deblur all the images in the directory `path/to/corrupted` and put them in the directory `path/to/clean`.
