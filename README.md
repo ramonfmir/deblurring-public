@@ -15,6 +15,8 @@
 To deblur a directory of images, first create a destination directory where you want the deblurred images to go. Then run:
 * `python3 deblur_images.py  /path/to/your/blurred/images  /path/to/destination`
 
+We have added the deblurred version of the images in `final_test` that you sent us in the directory `final_test_deblurred`. You can also see the results in the validation images in ``data/100clean`.
+
 # Project Inspiration and Introduction
 There are two main themes in this project:
 1. The Blurrer - Applies artificial, realistic blurs to images to allow us to train the De-Blurrer.
