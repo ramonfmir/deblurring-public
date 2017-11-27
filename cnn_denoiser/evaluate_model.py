@@ -1,5 +1,6 @@
 import tensorflow as tf
 import sys
+import os
 
 from model_definitions import autoencoder_model as model
 from model_definitions.networks import moussaka as autoencoder_network
@@ -12,8 +13,8 @@ import scipy.misc
 import glob
 
 # Paths
-model_save_path = 'trained_models/deblurring_model'
-dataset_path = 'data/100labeledLPforvalidation'
+model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
+dataset_path = 'data/100labeledLPforvalidation_same_dims_scaled'
 logs_directory = 'evaluate_logs'
 
 # Parameters
