@@ -19,10 +19,10 @@ tf.app.flags.DEFINE_string('model_name', 'tutorial_cnn',
 
 # Paths
 model_save_path = 'cnn_denoiser/trained_models/deblurring_model'
-dataset_path = 'data/blue_1378handpicked'
+dataset_path = 'data/training/blue_1378handpicked'
 logs_directory = './tensorboard_logs/'
 
-# Parameters
+# Parameterss
 image_width = 270
 image_height = 90
 batch_size = 64
@@ -39,7 +39,7 @@ alpha = tf.train.exponential_decay(starter_learning_rate, global_step,
 tf.summary.scalar('learning_rate', alpha)
 
 # Load the model
-model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/networks/" + FLAGS.model_name + ".py"
+model_file = os.path.dirname(os.path.abspath(__file__)) + "/model_definitions/" + FLAGS.model_name + ".py"
 spec = importlib.util.spec_from_file_location("model_definitions", model_file)
 autoencoder_network = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(autoencoder_network)
