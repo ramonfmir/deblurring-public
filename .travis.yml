@@ -1,0 +1,21 @@
+sudo: enabled
+language: python
+python:
+- 3.6
+env:
+  global:
+  - PYTHONPATH=.
+addons:
+  ssh_known_hosts: 52.170.199.130
+install:
+- sudo apt-get install sshpass
+- pip3 install --upgrade pip
+- pip3 install -r requirements_travis.txt
+- pip3 install --pre azure-cli --extra-index-url https://azurecliprod.blob.core.windows.net/edge
+script:
+- python3 -m coverage run --source=. -m scripts/run_tests.py
+- python3 -m coverage xml
+- for f in $(find . -name '*.py'); do pycodestyle --first $f; done
+after_success:
+- python3 -m codecov --token=a0ba70e0-9134-421f-b423-3aa504d98fa8
+- bash scripts/deploy.sh

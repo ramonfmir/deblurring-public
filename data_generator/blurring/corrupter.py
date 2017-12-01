@@ -66,7 +66,6 @@ def blur_pixelation(img):
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
     img = bl.pixelate_blur(pixelation_magnitude, img)
 
-    return original, img
 
 # Extreme vertical motion
 def blur_vertical(img):
