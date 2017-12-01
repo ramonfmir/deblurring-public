@@ -17,5 +17,5 @@ script:
 - python3 -m coverage xml
 - for f in $(find . -name '*.py'); do pycodestyle --first $f; done
 after_success:
-- python3 -m codecov --token=a0ba70e0-9134-421f-b423-3aa504d98fa8
+- python3 -m codecov --token=cd3a1de8-5e50-4cd1-aa93-bbf0e4603994
 - bash scripts/deploy.sh

@@ -1,5 +1,8 @@
 # Deblurring
 
+[![Build Status](https://travis-ci.com/arisPapadop/deblurring.svg?token=pRNqbEYuRYtTSViTnSrN&branch=master)](https://travis-ci.com/arisPapadop/deblurring) [![codecov](https://codecov.io/gh/arisPapadop/deblurring/branch/master/graph/badge.svg?token=utAgpZHhnh)](https://codecov.io/gh/arisPapadop/deblurring)
+
+
 ## Table of Contents
 1. Run instructions (How to deblur images)
 2. Project Inspiration and Introduction
