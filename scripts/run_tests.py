@@ -3,7 +3,7 @@ import os
 import sys
 import unittest
 
-base_dir = os.path.abspath(os.path.dirname(__file__))
+base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 modules = ("data_generator/", "cnn_denoiser/")
 
 def run_tests():
