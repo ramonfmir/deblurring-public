@@ -60,6 +60,9 @@ class data_set(object):
         # Apply blur to batch originals
         original, blurred = self.blur_batch(batch)
 
+        # Normalise colour
+        blurred = self.normalise_batch(blurred)
+        original = self.normalise_batch(original)
         return original, blurred
 
     def normalise_image(self, image):
