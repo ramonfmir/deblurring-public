@@ -1,10 +1,12 @@
 import sys
 sys.path.insert(0, "../..")
+
 import cv2
 import os
 import glob
 import numpy as np
 np.set_printoptions(threshold=np.inf)
+
 import scipy.misc as sc
 import random
 from skimage import color
@@ -16,22 +18,23 @@ from data_generator.blurring import contrast
 # The unziped files of images must exits in the relative directory
 # ../datasets/4000unlabeledLP_same_dims_scaled
 
-def load_images(train_path, image_size_x,image_size_y):
+def load_images(train_path, image_size_x, image_size_y):
     images = []
     img_names = []
     path = os.path.join(train_path, '*g')
+
     # Get all files in the directory
     files = glob.glob(path)
     print('Now going to read files {}'.format(path))
     for fl in files:
         image = cv2.imread(fl)
-        #image = cv2.resize(image, (image_size_x, image_size_y), 0, 0, cv2.INTER_CUBIC)
 
         images.append(image)
 
         flbase = os.path.basename(fl)
         img_names.append(flbase)
     random.shuffle(images)
+
     # images: List of images in Array form;
     # img_names: The list of corresponding image file name;
     return data_set(images)

@@ -111,7 +111,6 @@ def autoencoder(original, inputs, training):
     print(net.shape)
     pretrain(pretrain_steps, step, loss, original, 'deconv3', training)
 
-
     # Final tanh activation
     net = tf.nn.tanh(net)
 

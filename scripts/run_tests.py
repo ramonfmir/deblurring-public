@@ -4,7 +4,7 @@ import sys
 import unittest
 
 base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-modules = ("data_generator/", "cnn_denoiser/")
+modules = ("data_generator/",)
 
 def run_tests():
 	runner = unittest.TextTestRunner()
