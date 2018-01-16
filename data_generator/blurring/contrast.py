@@ -11,12 +11,3 @@ def increase_contrast(img, level=18):
     lab = cv2.merge((l2,a,b))  # merge channels
     img2 = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)  # convert from LAB to RGB
     return img2
-
-if __name__ == "__main__":
-    img = cv2.imread("license_plate.jpg")
-    print(img)
-    img = increase_contrast(img)
-
-    cv2.imshow('contrast', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()

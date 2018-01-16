@@ -89,13 +89,3 @@ def reshape(magnitude, pov, width, height, img):
     img = apply_perspective(pov, val, img)
     img = reduce_size(magnitude, val, img)
     return img, deepcopy(img)
-
-
-if __name__ == "__main__":
-    img = cv2.imread("../tests/lp.jpg")
-    # random_border(img)
-
-    img = reshape(0.7, 0.5, 256, 80, img)
-    cv2.imshow('Perspective', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()

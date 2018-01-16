@@ -66,6 +66,8 @@ def blur_pixelation(img):
     img = bl.motion_blur(motion_blur_kernel_size, motion_blur_angle, img)
     img = bl.pixelate_blur(pixelation_magnitude, img)
 
+    return original, img
+
 
 # Extreme vertical motion
 def blur_vertical(img):
@@ -125,19 +127,3 @@ def corrupt(img):
 def kernel_size_corrector(kernel_size):
     kernel_size = int(kernel_size)
     return kernel_size + 1 if kernel_size % 2 == 0 else kernel_size
-
-if __name__ == "__main__":
-    #image_data = input_data.load_images("data/40nice", 270, 90)
-    #input_, blurred = image_data.next_batch(1)
-    img = cv2.imread("data/3548awesome/chinahainan_29.jpg")
-    cv2.imshow('Good', img)
-
-    cv2.waitKey(0)
-
-    for i in range(100):
-        img = cv2.imread("data/3548awesome/chinahainan_29.jpg")
-
-        cv2.imshow('Bad', blur_main(img)[1])
-        cv2.waitKey(0)
-
-    cv2.destroyAllWindows()

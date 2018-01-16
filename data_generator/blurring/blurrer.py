@@ -97,10 +97,3 @@ def point_spread_matrix(size, r,f):
         y = int((r*np.sin(f*i)+r*np.cos(i*f)))
         kernel[y][i] = 1
     return kernel
-
-if __name__ == "__main__":
-    img = cv2.imread('license_plate.jpg')
-    img = rnd_remove_pixel(img,0.1)
-    cv2.imshow('name', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()

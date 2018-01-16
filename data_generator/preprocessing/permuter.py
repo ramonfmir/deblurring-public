@@ -5,7 +5,7 @@ import random as rand
 import cv2
 import sys
 import numpy as np
-import colour_normalize
+import data_generator.preprocessing.colour_normalize as cn
 
 from copy import deepcopy
 from itertools import permutations
@@ -63,14 +63,12 @@ def the_biggest_of_hacks():
         try:
             in_ = input().split(' ')
             path, ground_truth = in_[0], in_[1]
-            print(ground_truth)
             if not ('*' in ground_truth or '#' in ground_truth):
                 path_truths.append((path, ground_truth))
         except EOFError:
             print("All plates processed")
             break
 
-    print(path_truths)
     height, width, _ = base.shape
     char_width = int(width * char_ratio)
     dst_folder = os.path.abspath("../../data/generated/")
@@ -81,10 +79,9 @@ def the_biggest_of_hacks():
             if (not os.path.exists(char_path)):
                 continue
             char_img = cv2.imread(os.path.abspath("../../data/hackedIms/all/%s.jpg" % character))
-            print(i, character, char_width, height)
             char_img = cv2.resize(char_img, (char_width, height), 0, 0, cv2.INTER_CUBIC)
             generated_img = put_n_char(generated_img, i, char_img)
-        #np.place(generated_img, generated_img < 130, [0,0,0])
+
         cv2.imwrite(dst_folder + "/" + path, generated_img)
 
 def gen_data():
@@ -107,7 +104,7 @@ def gen_data():
             generated_img = put_n_char(generated_img, i, char_img)
         cv2.imwrite(dst_folder + "/" + str(j) + ".jpg", generated_img)
 
-    colour_normalize.normalize("../../data/hackedIms/uniform_yellow/")
+    cn.normalize("../../data/hackedIms/uniform_yellow/")
 
 def permute(img_src):
     img = cv2.imread(img_src)
@@ -136,22 +133,5 @@ def permute(img_src):
                 permed_image[ : , int(width * letter_positions[n]) : int(width * letter_positions[n]) + int(width * char_ratio)] = chars
         img_path, img_extension = filename, file_extension = os.path.splitext(img_src)
         img_dst = img_path + '_' + str(i) + img_extension
-        print("writing to ", img_dst)
+
         cv2.imwrite(img_dst, permed_image)
-
-    # return permed_image
-
-if __name__ == '__main__':
-    #the_biggest_of_hacks()
-
-    dataset_path = sys.argv[1]
-    for file_path in os.listdir(dataset_path):
-        file_path = dataset_path + "/" + file_path
-        permute(file_path)
-
-    colour_normalize.normalize(dataset_path)
-
-    #char = get_n_char(os.path.abspath("../../data/40nice/V.jpg"), 5)
-    #cv2.imwrite("V.jpg", char)
-
-    gen_data()

@@ -22,15 +22,14 @@ def is_blue(img):
     for row in img:
         for pixel in row:
             if (pixel > lower_blue).all() and (pixel < upper_blue).all():
-                color_dict['blue'] = color_dict['blue']+1
+                color_dict['blue'] = color_dict['blue'] + 1
             elif (pixel > lower_yellow).all() and (pixel < upper_yellow).all():
-                color_dict['yellow'] = color_dict['yellow']+1
+                color_dict['yellow'] = color_dict['yellow'] + 1
             elif (pixel > lower_white).all() and (pixel < upper_white).all():
-                color_dict['white'] = color_dict['white']+1
+                color_dict['white'] = color_dict['white'] + 1
             elif (pixel > lower_black).all() and (pixel < upper_black).all():
-                color_dict['black'] = color_dict['black']+1
-    # yb_contrib = color_dict['yellow'] + color_dict['black']
-    # bw_contrib = color_dict['blue'] + color_dict['white']
+                color_dict['black'] = color_dict['black'] + 1
+
     return color_dict['blue']> color_dict['yellow']
 
 
