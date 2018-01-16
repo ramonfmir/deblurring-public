@@ -1,6 +1,6 @@
 # Deblurring
 
-[![Build Status](https://travis-ci.com/arisPapadop/deblurring.svg?token=pRNqbEYuRYtTSViTnSrN&branch=master)](https://travis-ci.com/arisPapadop/deblurring) [![codecov](https://codecov.io/gh/arisPapadop/deblurring/branch/master/graph/badge.svg?token=utAgpZHhnh)](https://codecov.io/gh/arisPapadop/deblurring)
+[![Build Status](https://travis-ci.com/arisPapadop/deblurring.svg?token=pRNqbEYuRYtTSViTnSrN&branch=master)](https://travis-ci.com/arisPapadop/deblurring)
 
 
 ## Table of Contents
@@ -8,8 +8,9 @@
 2. Project Inspiration and Introduction
 3. Technologies
 4. How the **Blurring** works
-5. How the **De-Blurring** works
+5. How the **Deblurring** works
 6. Team Members
+7. The App
 
 ## Run Intructions
 ### Running locally
@@ -20,8 +21,8 @@ We have added the deblurred version of the images in `final_test` that you sent 
 
 # Project Inspiration and Introduction
 There are two main themes in this project:
-1. The Blurrer - Applies artificial, realistic blurs to images to allow us to train the De-Blurrer.
-2. The De-Blurrer - Receives a blurry image and attempts to produce the original.
+1. The Blurrer - Applies artificial, realistic blurs to images to allow us to train the Deblurrer.
+2. The Deblurrer - Receives a blurry image and attempts to produce the original.
 
 We are doing this for the following reasons:
 * Huawei's 2017 license plate deblurring competition.
@@ -33,7 +34,7 @@ Our final model was trained by Tensorflow GPU on a single K80 Graphics Card for 
 For Blurring we mainly used OpenCV Python.
 For model trainng and testing evaluation we used Tensorboard.
 
-# How the De-Blurring works
+# How the Deblurring works
 ## Image Processing
 The network requires that images have dimensions 270x90. Input images must be scaled before propagation. We used to keep the aspect ratio (and fill the gaps with black padding) but we found that this was not necessary. Though the spatial relationships between features is distorted, the network is trained on numberplates taken with a variety of different camera perspectives so is well equipped to deal with these distortions.
 The image is then converted to grey scale. This has the advantages:
@@ -63,6 +64,13 @@ To run the trianing script we run the following:
 ## Model Evaluation
 When training our model we used Tensorboard to evaluate its progress. Every 10 batches we save an image from just one channel of the propagation described above. We also record the average error of the batch and the current learning rate which are plotted as graphs.
 The weights are saved to a folder with the same periodicity. We can then load these weights into a local model and run them on 100 blurred images from real life. This gives us the best idea of how well the model is doing.
+
+# The App
+We wanted to wrap our model in a usable product so we built BCLPD (Blue Chinese License Plates Deblurrer), an Android application that allows us to showcase our algorithm in a real world situation. The main features are:
+* Taking a picture or uploading it from the gallery.
+* Cropping the picture to select the license plate.
+* Deblurring the license plate offline.
+For more information check out docs.
 
 # Team Members
 * Ramon Fernandez Mir (@ramonfmir)
